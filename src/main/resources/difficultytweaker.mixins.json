@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.pepe20129.difficultytweaker.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "AbstractSkeletonEntityMixin",
+    "BeeEntityMixin",
+    "CaveSpiderEntityMixin",
+    "FireBeamGoalMixin",
+    "FireBlockMixin",
+    "LocalDifficultyMixin",
+    "MobEntityMixin",
+    "NetherPortalBlockMixin",
+    "PersistentProjectileEntityMixin",
+    "PhantomSpawnerMixin",
+    "PlayerEntityMixin",
+    "RaidMemberMixin",
+    "RaidMixin",
+    "WitherSkullEntityMixin",
+    "ZombieEntityMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

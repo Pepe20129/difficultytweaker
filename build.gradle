@@ -7,6 +7,10 @@ repositories {
 	maven {
 		url = 'https://jitpack.io'
 	}
+	maven {
+		name = "Ladysnake Mods"
+		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+	}
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -32,19 +36,19 @@ dependencies {
 	modImplementation commandAPI
 	include commandAPI
 
-	// These have been temporarily disabled since CCA implementation won't happen until it updates to 1.17
+	// Disabled while I figure out how to use cca
 	/*
 	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.7.11"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:2.7.11"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:2.7.11"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:2.7.11"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:${project.cca_version}"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cca_version}"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
 
 	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.7.11"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:2.7.11"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:2.7.11"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:2.7.11"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
 	*/
 }
 

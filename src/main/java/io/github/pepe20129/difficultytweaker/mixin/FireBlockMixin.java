@@ -32,15 +32,15 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
     @Shadow private int getBurnChance(WorldView arg, BlockPos pos) {
         throw new AssertionError();
     }
-    @Shadow private static int method_26155(Random random) {
+    @Shadow private static int getFireTickDelay(Random random) {
         throw new AssertionError();
     }
-    @Shadow private BlockState method_24855(WorldAccess arg, BlockPos arg2, int i) {
+    @Shadow private BlockState getStateWithAge(WorldAccess arg, BlockPos arg2, int i) {
         throw new AssertionError();
     }
     @Inject(at = @At("HEAD"), method = "scheduledTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
-        world.getBlockTickScheduler().schedule(pos, this, method_26155(world.random));
+        world.getBlockTickScheduler().schedule(pos, this, getFireTickDelay(world.random));
         if (!world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK)) {
             return;
         }
@@ -116,7 +116,7 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
                             if (q > 0 && random.nextInt(o) <= q && (!world.isRaining() || !isRainingAround((World)world, (BlockPos)lv3))) {
 
                                 int r = Math.min(15, i + random.nextInt(5) / 4);
-                                world.setBlockState((BlockPos)lv3, method_24855((WorldAccess)world, (BlockPos)lv3, r), 3);
+                                world.setBlockState((BlockPos)lv3, getStateWithAge((WorldAccess)world, (BlockPos)lv3, r), 3);
                             }
                         }
                     }

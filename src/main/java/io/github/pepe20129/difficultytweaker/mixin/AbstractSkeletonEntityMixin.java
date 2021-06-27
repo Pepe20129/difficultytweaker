@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractSkeletonEntity.class)
@@ -28,6 +29,22 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
     protected AbstractSkeletonEntityMixin(EntityType<? extends HostileEntity> entityType, World world, MeleeAttackGoal meleeAttackGoal) {
         super(entityType, world);
     }
+
+    /*
+    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 0)
+    int i(int i) {
+        if(CommandVars.guardianActive)
+            return CommandVars.skeletonCooldown;
+        return 20;
+    }
+
+    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 1)
+    int i2(int i) {
+        if(CommandVars.guardianActive)
+            return CommandVars.skeletonCooldown;
+        return 40;
+    }
+    */
 
     @Shadow @Final private MeleeAttackGoal meleeAttackGoal;
     @Shadow @Final private BowAttackGoal<AbstractSkeletonEntity> bowAttackGoal;

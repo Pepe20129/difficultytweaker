@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class FireBeamGoalMixin {
     @ModifyVariable(at = @At("STORE"), method = "tick()V", ordinal = 0)
     float f(float f) {
+        CommandVars.loadConfig();
         if(CommandVars.guardianActive)
             return 1.0f + CommandVars.guardianAmount;
         return 1.0f;

@@ -40,6 +40,7 @@ public abstract class BeeEntityMixin extends AnimalEntity {
                     i = 18;
                 }
 
+                CommandVars.loadConfig();
                 if (CommandVars.beeActive) {
                     i = CommandVars.beeLength;
                 }

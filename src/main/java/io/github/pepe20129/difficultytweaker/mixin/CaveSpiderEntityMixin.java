@@ -32,6 +32,7 @@ public class CaveSpiderEntityMixin extends SpiderEntity {
                     i = 15;
                 }
 
+                CommandVars.loadConfig();
                 if (CommandVars.caveSpiderActive) {
                     i = CommandVars.caveSpiderLength;
                 }

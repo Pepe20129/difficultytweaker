@@ -52,6 +52,7 @@ public class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
                 i = 40;
             }
 
+            CommandVars.loadConfig();
             if (CommandVars.witherSkullActive) {
                 i = CommandVars.witherSkullLength;
             }

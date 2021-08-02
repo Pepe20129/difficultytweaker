@@ -9,10 +9,14 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import com.mojang.brigadier.context.CommandContext;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+
+import java.io.File;
+
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.FloatArgumentType.getFloat;
@@ -30,7 +34,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("difficultyTweaker")
 					.requires(source -> source.hasPermissionLevel(2))
 					.executes(context -> {
-						sendText(context, "\nThe main command of the §lDifficulty Tweaker§r mod.\nIt currently allows you to change values that are used on this mod's mixins and turn them on or off.\n§c§l§nThis command is not finished yet!§r\n§7§oIt doesn't even save upon leaving the world yet. This means if you want different settings from the default ones you'll have to change them every time you load the world.");
+						sendText(context, "\nThe main command of the §lDifficulty Tweaker§r mod.\nIt currently allows you to change values that are used on this mod's mixins and turn them on or off.\n§c§l§nThis command is not finished yet!§r\n§7§oThe settings are shared between all worlds, so be careful.");
 						return 1;
 					}).build();
 
@@ -62,6 +66,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.ldActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe local difficulty mixin is now §aactivated§r.");
 						} else {
@@ -85,6 +90,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "start");
 						CommandVars.ldStart = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe local difficulty mixin's start value is now " + a);
 						return 1;
 					}).build();
@@ -104,6 +110,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "dtcm");
 						CommandVars.ldDayTimeClampMax = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the day time factor is now " + a);
 						return 1;
 					}).build();
@@ -123,6 +130,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "ccm");
 						CommandVars.ldChunkClampMax = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the chunk factor is now " + a);
 						return 1;
 					}).build();
@@ -142,6 +150,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "moon");
 						CommandVars.ldMoon = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe local difficulty mixin's factor multiplier is now " + a);
 						return 1;
 					}).build();
@@ -176,6 +185,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.beeActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe bee mixin is now §aactivated§r.");
 						} else {
@@ -199,6 +209,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "length");
 						CommandVars.beeLength = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe bee poison length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -233,6 +244,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.caveSpiderActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe cave spider mixin is now §aactivated§r.");
 						} else {
@@ -256,6 +268,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "length");
 						CommandVars.caveSpiderLength = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe cave spider poison length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -290,6 +303,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.skeletonActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe skeleton mixin is now §aactivated§r.");
 						} else {
@@ -313,6 +327,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "divergence");
 						CommandVars.skeletonDivergence = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nSkeletons' arrows divergence is §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -332,6 +347,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "cooldown");
 						CommandVars.skeletonCooldown = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nSkeletons' cooldown is §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -366,6 +382,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.fireActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe fire mixin is now §aactivated§r.");
 						} else {
@@ -389,6 +406,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "encouragement");
 						CommandVars.fireEncouragement = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe extra fire encouragement is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -423,6 +441,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.netherPortalActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe nether portal mixin is now §aactivated§r.");
 						} else {
@@ -446,6 +465,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "probability");
 						CommandVars.netherPortalProb = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe probability is now §l[" + a + "/2000]§r.");
 						return 1;
 					}).build();
@@ -480,6 +500,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.mobActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe mob armor mixin is now §aactivated§r.");
 						} else {
@@ -503,6 +524,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.mobArmorProb = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe probability is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -526,6 +548,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						if(a < 0)
 							a = 0;
 						CommandVars.mobFall = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -560,6 +583,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.projectileActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe projectile mixin is now §aactivated§r.");
 						} else {
@@ -583,6 +607,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.projectileBonus = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe damage bonus is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -617,6 +642,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.playerActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe player mixin is now §aactivated§r.");
 						} else {
@@ -640,6 +666,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.playerMultiplier = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe damage multiplier is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -674,6 +701,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.raidActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe raid mixin is now §aactivated§r.");
 						} else {
@@ -699,6 +727,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						if (a > 15)
 							a = 15;
 						CommandVars.raidCount = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe raid count is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -733,6 +762,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.witherSkullActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe wither skull mixin is now §aactivated§r.");
 						} else {
@@ -756,6 +786,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "value");
 						CommandVars.witherSkullLength = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe effect's length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -790,6 +821,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.zombieActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe zombie mixin is now §aactivated§r.");
 						} else {
@@ -813,6 +845,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						int a = getInteger(context, "value");
 						CommandVars.zombieWeaponChance = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe weapon chance is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -846,6 +879,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.guardianActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe guardian mixin is now §aactivated§r.");
 						} else {
@@ -869,6 +903,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.guardianAmount = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe damage bonus is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -902,6 +937,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.phantomActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe phantom mixin is now §aactivated§r.");
 						} else {
@@ -927,6 +963,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						if(a >= CommandVars.phantomMax)
 							a = CommandVars.phantomMax - 1;
 						CommandVars.phantomMin = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe minimum amount is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -948,6 +985,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						if(a <= CommandVars.phantomMin)
 							a = CommandVars.phantomMin + 1;
 						CommandVars.phantomMax = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe maximum amount is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -981,6 +1019,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						boolean a = getBool(context, "active");
 						CommandVars.cldActive = a;
+						CommandVars.saveConfig();
 						if(a) {
 							sendText(context, "\nThe clamped local difficulty mixin is now §aactivated§r.");
 						} else {
@@ -1004,6 +1043,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.cldMinClampLim = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe lower clamping limit is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1023,6 +1063,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.cldMaxClampLim = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe upper clamping limit is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1042,6 +1083,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.cldMinClamp = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe lower clamping value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1061,6 +1103,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.executes(context -> {
 						float a = getFloat(context, "value");
 						CommandVars.cldMaxClamp = a;
+						CommandVars.saveConfig();
 						sendText(context, "\nThe upper clamping value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();

@@ -64,6 +64,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
             if (this.world.getDifficulty() != Difficulty.HARD) {
                 i = 40;
             }
+            CommandVars.loadConfig();
             if (CommandVars.skeletonActive) {
                 i = CommandVars.skeletonCooldown; //This seems to not work? Maybe not??
             }
@@ -87,6 +88,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
         double g = target.getZ() - getZ();
         double h = Math.sqrt(d * d + g * g);
+        CommandVars.loadConfig();
         if (CommandVars.skeletonActive) {
             lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, CommandVars.skeletonDivergence); //This seems to not work?
         } else {

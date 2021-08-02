@@ -18,6 +18,7 @@ public class LocalDifficultyMixin {
     @Shadow @Final private Difficulty globalDifficulty;
     @Inject(at = @At("HEAD"), method = "setLocalDifficulty(Lnet/minecraft/world/Difficulty;JJF)F", cancellable = true)
 	private void setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> info) {
+        CommandVars.loadConfig();
         if(CommandVars.ldActive) {
             float everything = CommandVars.ldStart;
 
@@ -68,6 +69,7 @@ public class LocalDifficultyMixin {
     @Inject(at = @At("HEAD"), method = "getClampedLocalDifficulty()F", cancellable = true)
     private void getClampedLocalDifficulty(CallbackInfoReturnable<Float> info) {
         float v = (this.localDifficulty - 2F) / 2F;
+        CommandVars.loadConfig();
         if(CommandVars.cldActive) {
             if(this.localDifficulty < CommandVars.cldMinClampLim) {
                 v = CommandVars.cldMinClamp;

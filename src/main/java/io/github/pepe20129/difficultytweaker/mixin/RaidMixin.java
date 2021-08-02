@@ -22,6 +22,7 @@ public class RaidMixin {
         if (difficulty == Difficulty.HARD) {
             v = 7;
         }
+        CommandVars.loadConfig();
         if (CommandVars.raidActive) {
             v = CommandVars.raidCount;
         }

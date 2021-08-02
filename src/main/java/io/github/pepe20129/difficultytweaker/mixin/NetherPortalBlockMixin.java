@@ -26,6 +26,7 @@ public class NetherPortalBlockMixin extends Block {
     @Inject(at = @At("HEAD"), method = "randomTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         int v;
+        CommandVars.loadConfig();
         if (CommandVars.netherPortalActive) {
             v = CommandVars.netherPortalProb;
         } else {

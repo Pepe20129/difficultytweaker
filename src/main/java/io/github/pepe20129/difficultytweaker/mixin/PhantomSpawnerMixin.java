@@ -93,6 +93,7 @@ public class PhantomSpawnerMixin {
 
             EntityData lv8 = null;
             int l;
+            CommandVars.loadConfig();
             if(CommandVars.phantomActive) {
                 l = CommandVars.phantomMin + random.nextInt(CommandVars.phantomMax - CommandVars.phantomMin);
             } else {

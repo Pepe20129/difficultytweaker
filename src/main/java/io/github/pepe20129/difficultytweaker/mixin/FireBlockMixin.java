@@ -105,6 +105,7 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
                         int p = getBurnChance((WorldView)world, (BlockPos)lv3);
                         if (p > 0) {
                             int q = 0;
+                            CommandVars.loadConfig();
                             if (CommandVars.fireActive) {
                                 q = (p + CommandVars.fireEncouragement) / (i + 30);
                             } else {

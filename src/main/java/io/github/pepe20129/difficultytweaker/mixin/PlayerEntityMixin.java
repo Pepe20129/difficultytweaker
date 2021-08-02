@@ -19,6 +19,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(at = @At("TAIL"), method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", cancellable = true)
     private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
+        CommandVars.loadConfig();
         if (source.isScaledWithDifficulty() && CommandVars.playerActive) {
             amount = amount * CommandVars.playerMultiplier;
             info.setReturnValue(super.damage(source, amount));

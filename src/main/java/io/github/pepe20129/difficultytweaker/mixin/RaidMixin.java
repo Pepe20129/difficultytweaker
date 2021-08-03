@@ -3,7 +3,6 @@ package io.github.pepe20129.difficultytweaker.mixin;
 import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.village.raid.Raid;
 import net.minecraft.world.Difficulty;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

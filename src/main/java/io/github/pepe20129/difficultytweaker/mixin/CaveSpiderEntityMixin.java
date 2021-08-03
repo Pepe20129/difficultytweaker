@@ -10,7 +10,6 @@ import net.minecraft.entity.mob.CaveSpiderEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

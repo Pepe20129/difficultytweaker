@@ -1,6 +1,5 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;

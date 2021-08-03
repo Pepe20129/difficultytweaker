@@ -12,7 +12,6 @@ import net.minecraft.entity.projectile.WitherSkullEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

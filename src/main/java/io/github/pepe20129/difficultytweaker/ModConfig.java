@@ -15,7 +15,7 @@ public class ModConfig {
     public void saveConfig() {
         File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");;
         try {
-            new TomlWriter().write(new ModConfig(), configFile);
+            new TomlWriter().write(this, configFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

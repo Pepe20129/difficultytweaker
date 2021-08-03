@@ -8,22 +8,22 @@ import java.io.File;
 import java.io.IOException;
 
 public class Reference {
-    private static CommandVars config = new CommandVars();
+    private static ModConfig config = new ModConfig();
 
     static {
         File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");;
         try {
             if(configFile.exists()) {
 
-                config = new Toml().read(configFile).to(CommandVars.class);
+                config = new Toml().read(configFile).to(ModConfig.class);
             }
-            new TomlWriter().write(new CommandVars(), configFile);
+            new TomlWriter().write(new ModConfig(), configFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static CommandVars getConfig() {
+    public static ModConfig getConfig() {
         return config;
     }
 }

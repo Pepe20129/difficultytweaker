@@ -30,18 +30,11 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
     }
 
     /*
-    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 0)
-    int i(int i) {
-        if(Reference.getConfig().guardianActive)
+    @ModifyVariable(at = @At("LOAD"), method = "updateAttackType()V", ordinal = 0)
+    int modifySkeletonCooldown(int original) {
+        if(Reference.getConfig().skeletonActive)
             return Reference.getConfig().skeletonCooldown;
-        return 20;
-    }
-
-    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 1)
-    int i2(int i) {
-        if(Reference.getConfig().guardianActive)
-            return Reference.getConfig().skeletonCooldown;
-        return 40;
+        return original;
     }
     */
 
@@ -63,7 +56,6 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
             if (this.world.getDifficulty() != Difficulty.HARD) {
                 i = 40;
             }
-            Reference.getConfig().loadConfig();
             if (Reference.getConfig().skeletonActive) {
                 i = Reference.getConfig().skeletonCooldown; //This seems to not work? Maybe not??
             }
@@ -87,7 +79,6 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
         double g = target.getZ() - getZ();
         double h = Math.sqrt(d * d + g * g);
-        Reference.getConfig().loadConfig();
         if (Reference.getConfig().skeletonActive) {
             lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, Reference.getConfig().skeletonDivergence); //This seems to not work?
         } else {
@@ -97,17 +88,3 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         return;
     }
 }
-
-/*
-public void attack(LivingEntity target, float pullProgress) {
-    ItemStack lv = getArrowType(getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-    PersistentProjectileEntity lv2 = createArrowProjectile(lv, pullProgress);
-    double d = target.getX() - getX();
-    double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
-    double g = target.getZ() - getZ();
-    double h = Math.sqrt(d * d + g * g);
-    lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (14 - this.world.getDifficulty().getId() * 4));
-    playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRandom().nextFloat() * 0.4F + 0.8F));
-    this.world.spawnEntity((Entity)lv2);
-}
- */

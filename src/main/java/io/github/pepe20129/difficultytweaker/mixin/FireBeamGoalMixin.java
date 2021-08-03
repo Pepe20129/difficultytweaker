@@ -8,10 +8,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(targets = "net.minecraft.entity.mob.GuardianEntity$FireBeamGoal")
 public abstract class FireBeamGoalMixin {
     @ModifyVariable(at = @At("STORE"), method = "tick()V", ordinal = 0)
-    float f(float f) {
-        Reference.getConfig().loadConfig();
-        if(Reference.getConfig().guardianActive)
-            return 1.0f + Reference.getConfig().guardianAmount;
-        return 1.0f;
+    float modifyFireBeamDamage(float original) {
+        return Reference.getConfig().guardianActive ? Reference.getConfig().guardianAmount : original;
     }
 }

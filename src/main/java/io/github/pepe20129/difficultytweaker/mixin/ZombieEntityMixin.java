@@ -32,7 +32,6 @@ public class ZombieEntityMixin extends HostileEntity {
             v = 0.01F;
         }
 
-        Reference.getConfig().loadConfig();
         if (Reference.getConfig().zombieActive) {
             v = Reference.getConfig().zombieWeaponChance;
         }

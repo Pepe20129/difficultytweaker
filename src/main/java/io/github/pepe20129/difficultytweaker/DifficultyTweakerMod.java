@@ -27,7 +27,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 	public void onInitialize() {
 		//Brigadier nightmare.
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-			LiteralCommandNode<ServerCommandSource> extraDifficultyNode = CommandManager
+			LiteralCommandNode<ServerCommandSource> difficultyTweakerNode = CommandManager
 					.literal("difficultyTweaker")
 					.requires(source -> source.hasPermissionLevel(2))
 					.executes(context -> {
@@ -49,7 +49,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().localDifficulty.ldActive) {
+						if (Reference.getConfig().localDifficulty.ldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -64,7 +64,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().localDifficulty.ldActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe local difficulty mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe local difficulty mixin is now §cdeactivated§r.");
@@ -168,7 +168,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().beeActive) {
+						if (Reference.getConfig().beeActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -183,7 +183,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().beeActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe bee mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe bee mixin is now §cdeactivated§r.");
@@ -227,7 +227,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().caveSpiderActive) {
+						if (Reference.getConfig().caveSpiderActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -242,7 +242,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().caveSpiderActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe cave spider mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe cave spider mixin is now §cdeactivated§r.");
@@ -286,7 +286,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().skeletonActive) {
+						if (Reference.getConfig().skeletonActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -301,7 +301,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().skeletonActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe skeleton mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe skeleton mixin is now §cdeactivated§r.");
@@ -365,7 +365,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().fireActive) {
+						if (Reference.getConfig().fireActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -380,7 +380,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().fireActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe fire mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe fire mixin is now §cdeactivated§r.");
@@ -424,7 +424,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().netherPortalActive) {
+						if (Reference.getConfig().netherPortalActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -439,7 +439,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().netherPortalActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe nether portal mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe nether portal mixin is now §cdeactivated§r.");
@@ -483,7 +483,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().mobActive) {
+						if (Reference.getConfig().mobActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -498,7 +498,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().mobActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe mob armor mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe mob armor mixin is now §cdeactivated§r.");
@@ -540,9 +540,9 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						if(a > 1)
+						if (a > 1)
 							a = 1;
-						if(a < 0)
+						if (a < 0)
 							a = 0;
 						Reference.getConfig().mobFall = a;
 						Reference.getConfig().saveConfig();
@@ -566,7 +566,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().projectileActive) {
+						if (Reference.getConfig().projectileActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -581,7 +581,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().projectileActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe projectile mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe projectile mixin is now §cdeactivated§r.");
@@ -625,7 +625,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().playerActive) {
+						if (Reference.getConfig().playerActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -640,7 +640,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().playerActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe player mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe player mixin is now §cdeactivated§r.");
@@ -684,7 +684,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().raidActive) {
+						if (Reference.getConfig().raidActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -699,7 +699,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().raidActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe raid mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe raid mixin is now §cdeactivated§r.");
@@ -745,7 +745,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().witherSkullActive) {
+						if (Reference.getConfig().witherSkullActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -760,7 +760,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().witherSkullActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe wither skull mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe wither skull mixin is now §cdeactivated§r.");
@@ -804,7 +804,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().zombieActive) {
+						if (Reference.getConfig().zombieActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -819,7 +819,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().zombieActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe zombie mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe zombie mixin is now §cdeactivated§r.");
@@ -862,7 +862,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().guardianActive) {
+						if (Reference.getConfig().guardianActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -877,7 +877,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().guardianActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe guardian mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe guardian mixin is now §cdeactivated§r.");
@@ -891,7 +891,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("value")
 					.executes(context -> {
 						String a = "§l[" + Reference.getConfig().guardianAmount + "]§r";
-						sendText(context, "\nSets the bonus damage for guardian laser before damage scaling.\nDefault value: §l[0.0]§r\nCurrent value: " + a);
+						sendText(context, "\nSets the bonus damage for guardian laser before damage scaling.\nDefault value: §l[2.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
 
@@ -920,7 +920,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().phantomActive) {
+						if (Reference.getConfig().phantomActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -935,7 +935,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().phantomActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe phantom mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe phantom mixin is now §cdeactivated§r.");
@@ -957,7 +957,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						if(a >= Reference.getConfig().phantomMax)
+						if (a >= Reference.getConfig().phantomMax)
 							a = Reference.getConfig().phantomMax - 1;
 						Reference.getConfig().phantomMin = a;
 						Reference.getConfig().saveConfig();
@@ -979,7 +979,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						if(a <= Reference.getConfig().phantomMin)
+						if (a <= Reference.getConfig().phantomMin)
 							a = Reference.getConfig().phantomMin + 1;
 						Reference.getConfig().phantomMax = a;
 						Reference.getConfig().saveConfig();
@@ -1002,7 +1002,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().clampedRegionalDifficulty.cldActive) {
+						if (Reference.getConfig().clampedRegionalDifficulty.cldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -1017,7 +1017,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 						boolean a = getBool(context, "active");
 						Reference.getConfig().clampedRegionalDifficulty.cldActive = a;
 						Reference.getConfig().saveConfig();
-						if(a) {
+						if (a) {
 							sendText(context, "\nThe clamped local difficulty mixin is now §aactivated§r.");
 						} else {
 							sendText(context, "\nThe clamped local difficulty mixin is now §cdeactivated§r.");
@@ -1109,9 +1109,9 @@ public class DifficultyTweakerMod implements ModInitializer {
 
 		//region Command parenting
 		//There has to be a better way to do this.
-			dispatcher.getRoot().addChild(extraDifficultyNode);
+			dispatcher.getRoot().addChild(difficultyTweakerNode);
 
-				extraDifficultyNode.addChild(localDifficultyNode);
+				difficultyTweakerNode.addChild(localDifficultyNode);
 					localDifficultyNode.addChild(ldActiveNode);
 						ldActiveNode.addChild(ldActiveVNode);
 					localDifficultyNode.addChild(ldStartNode);
@@ -1123,19 +1123,19 @@ public class DifficultyTweakerMod implements ModInitializer {
 					localDifficultyNode.addChild(ldMoonNode);
 						ldMoonNode.addChild(ldMoonVNode);
 
-				extraDifficultyNode.addChild(beeNode);
+				difficultyTweakerNode.addChild(beeNode);
 					beeNode.addChild(beeActiveNode);
 						beeActiveNode.addChild(beeActiveVNode);
 					beeNode.addChild(beeLengthNode);
 						beeLengthNode.addChild(beeLengthVNode);
 
-				extraDifficultyNode.addChild(caveSpiderNode);
+				difficultyTweakerNode.addChild(caveSpiderNode);
 					caveSpiderNode.addChild(caveSpiderActiveNode);
 						caveSpiderActiveNode.addChild(caveSpiderActiveVNode);
 					caveSpiderNode.addChild(caveSpiderLengthNode);
 						caveSpiderLengthNode.addChild(caveSpiderLengthVNode);
 
-				extraDifficultyNode.addChild(skeletonNode);
+				difficultyTweakerNode.addChild(skeletonNode);
 					skeletonNode.addChild(skeletonActiveNode);
 						skeletonActiveNode.addChild(skeletonActiveVNode);
 					skeletonNode.addChild(skeletonDivergenceNode);
@@ -1143,19 +1143,19 @@ public class DifficultyTweakerMod implements ModInitializer {
 					skeletonNode.addChild(skeletonCooldownNode);
 						skeletonCooldownNode.addChild(skeletonCooldownVNode);
 
-				extraDifficultyNode.addChild(fireNode);
+				difficultyTweakerNode.addChild(fireNode);
 					fireNode.addChild(fireActiveNode);
 						fireActiveNode.addChild(fireActiveVNode);
 					fireNode.addChild(fireEncouragementNode);
 						fireEncouragementNode.addChild(fireEncouragementVNode);
 
-				extraDifficultyNode.addChild(netherPortalNode);
+				difficultyTweakerNode.addChild(netherPortalNode);
 					netherPortalNode.addChild(netherPortalActiveNode);
 						netherPortalActiveNode.addChild(netherPortalActiveVNode);
 					netherPortalNode.addChild(netherPortalProbNode);
 						netherPortalProbNode.addChild(netherPortalProbVNode);
 
-				extraDifficultyNode.addChild(mobNode);
+				difficultyTweakerNode.addChild(mobNode);
 					mobNode.addChild(mobActiveNode);
 						mobActiveNode.addChild(mobActiveVNode);
 					mobNode.addChild(mobArmorValueNode);
@@ -1163,43 +1163,43 @@ public class DifficultyTweakerMod implements ModInitializer {
 					mobNode.addChild(mobFallNode);
 						mobFallNode.addChild(mobFallVNode);
 
-				extraDifficultyNode.addChild(projectileNode);
+				difficultyTweakerNode.addChild(projectileNode);
 					projectileNode.addChild(projectileActiveNode);
 						projectileActiveNode.addChild(projectileActiveVNode);
 					projectileNode.addChild(projectileValueNode);
 						projectileValueNode.addChild(projectileValueVNode);
 
-				extraDifficultyNode.addChild(playerNode);
+				difficultyTweakerNode.addChild(playerNode);
 					playerNode.addChild(playerActiveNode);
 						playerActiveNode.addChild(playerActiveVNode);
 					playerNode.addChild(playerMultiplierNode);
 						playerMultiplierNode.addChild(playerMultiplierVNode);
 
-				extraDifficultyNode.addChild(raidNode);
+				difficultyTweakerNode.addChild(raidNode);
 					raidNode.addChild(raidActiveNode);
 						raidActiveNode.addChild(raidActiveVNode);
 					raidNode.addChild(raidCountNode);
 						raidCountNode.addChild(raidCountVNode);
 
-				extraDifficultyNode.addChild(witherSkullNode);
+				difficultyTweakerNode.addChild(witherSkullNode);
 					witherSkullNode.addChild(witherSkullActiveNode);
 						witherSkullActiveNode.addChild(witherSkullActiveVNode);
 					witherSkullNode.addChild(witherSkullLengthNode);
 						witherSkullLengthNode.addChild(witherSkullLengthVNode);
 
-				extraDifficultyNode.addChild(zombieNode);
+				difficultyTweakerNode.addChild(zombieNode);
 					zombieNode.addChild(zombieActiveNode);
 						zombieActiveNode.addChild(zombieActiveVNode);
 					zombieNode.addChild(zombieChanceNode);
 						zombieChanceNode.addChild(zombieChanceVNode);
 
-				extraDifficultyNode.addChild(guardianNode);
+				difficultyTweakerNode.addChild(guardianNode);
 					guardianNode.addChild(guardianActiveNode);
 						guardianActiveNode.addChild(guardianActiveVNode);
 					guardianNode.addChild(guardianValueNode);
 						guardianValueNode.addChild(guardianValueVNode);
 
-				extraDifficultyNode.addChild(phantomNode);
+				difficultyTweakerNode.addChild(phantomNode);
 					phantomNode.addChild(phantomActiveNode);
 						phantomActiveNode.addChild(phantomActiveVNode);
 					phantomNode.addChild(phantomMinNode);
@@ -1207,7 +1207,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					phantomNode.addChild(phantomMaxNode);
 						phantomMaxNode.addChild(phantomMaxVNode);
 
-				extraDifficultyNode.addChild(clampedLocalDifficultyNode);
+				difficultyTweakerNode.addChild(clampedLocalDifficultyNode);
 					clampedLocalDifficultyNode.addChild(cldActiveNode);
 						cldActiveNode.addChild(cldActiveVNode);
 					clampedLocalDifficultyNode.addChild(cldMinClampLimNode);

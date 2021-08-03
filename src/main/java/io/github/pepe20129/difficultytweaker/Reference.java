@@ -13,7 +13,7 @@ public class Reference {
     static {
         File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");;
         try {
-            if(configFile.exists()) {
+            if (configFile.exists()) {
 
                 config = new Toml().read(configFile).to(ModConfig.class);
             }

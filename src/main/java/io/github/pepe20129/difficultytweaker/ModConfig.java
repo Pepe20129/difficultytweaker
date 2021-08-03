@@ -8,10 +8,6 @@ import java.io.IOException;
 
 public class ModConfig {
 
-    public void loadConfig() {
-        // Is this really needed?
-    }
-
     public void saveConfig() {
         File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");;
         try {
@@ -25,10 +21,10 @@ public class ModConfig {
     public LocalDifficulty localDifficulty = new LocalDifficulty();
     public static class LocalDifficulty {
         public boolean ldActive = false;
-        public float ldStart = 0.75F;
-        public float ldDayTimeClampMax = 1F;
-        public float ldChunkClampMax = 1F;
-        public float ldMoon = 0.25F;
+        public float ldStart = 0.75f;
+        public float ldDayTimeClampMax = 1f;
+        public float ldChunkClampMax = 1f;
+        public float ldMoon = 0.25f;
     }
     //endregion
 
@@ -60,18 +56,18 @@ public class ModConfig {
 
     //region Mob
     public boolean mobActive = false;
-    public float mobArmorProb = 0.1F;
-    public float mobFall = 0.33F;
+    public float mobArmorProb = 0.1f;
+    public float mobFall = 0.33f;
     //endregion
 
     //region Projectile
     public boolean projectileActive = false;
-    public float projectileBonus = 0.33F;
+    public float projectileBonus = 0.33f;
     //endregion
 
     //region Player
     public boolean playerActive = false;
-    public float playerMultiplier = 1.5F;
+    public float playerMultiplier = 1.5f;
     //endregion
 
     //region Raid
@@ -86,12 +82,12 @@ public class ModConfig {
 
     //region Zombie
     public boolean zombieActive = false;
-    public float zombieWeaponChance = 0.1F;
+    public float zombieWeaponChance = 0.1f;
     //endregion
 
     //region Guardian
     public boolean guardianActive = false;
-    public float guardianAmount = 0F;
+    public float guardianAmount = 2f;
     //endregion
 
     //region Phantom
@@ -104,10 +100,10 @@ public class ModConfig {
     public ClampedRegionalDifficulty clampedRegionalDifficulty = new ClampedRegionalDifficulty();
     public static class ClampedRegionalDifficulty {
         public boolean cldActive = false;
-        public float cldMinClampLim = 2F;
-        public float cldMaxClampLim = 4F;
-        public float cldMinClamp = 0F;
-        public float cldMaxClamp = 1F;
+        public float cldMinClampLim = 2f;
+        public float cldMaxClampLim = 4f;
+        public float cldMinClamp = 0f;
+        public float cldMaxClamp = 1f;
     }
     //endregion
 }

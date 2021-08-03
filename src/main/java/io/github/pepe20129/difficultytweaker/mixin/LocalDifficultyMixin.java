@@ -13,13 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalDifficulty.class)
 public class LocalDifficultyMixin {
-
     @Shadow @Final private float localDifficulty;
     @Shadow @Final private Difficulty globalDifficulty;
     @Inject(at = @At("HEAD"), method = "setLocalDifficulty(Lnet/minecraft/world/Difficulty;JJF)F", cancellable = true)
 	private void setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> info) {
-        Reference.getConfig().loadConfig();
-        if(Reference.getConfig().localDifficulty.ldActive) {
+        if (Reference.getConfig().localDifficulty.ldActive) {
             float everything = Reference.getConfig().localDifficulty.ldStart;
 
             //1 day = 24k ticks
@@ -37,7 +35,7 @@ public class LocalDifficultyMixin {
 
             info.setReturnValue(3 * everything);
         } else {
-            if(difficulty == Difficulty.PEACEFUL) {
+            if (difficulty == Difficulty.PEACEFUL) {
                 info.setReturnValue(0F);
             }
 
@@ -69,19 +67,18 @@ public class LocalDifficultyMixin {
     @Inject(at = @At("HEAD"), method = "getClampedLocalDifficulty()F", cancellable = true)
     private void getClampedLocalDifficulty(CallbackInfoReturnable<Float> info) {
         float v = (this.localDifficulty - 2F) / 2F;
-        Reference.getConfig().loadConfig();
-        if(Reference.getConfig().clampedRegionalDifficulty.cldActive) {
-            if(this.localDifficulty < Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim) {
+        if (Reference.getConfig().clampedRegionalDifficulty.cldActive) {
+            if (this.localDifficulty < Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim) {
                 v = Reference.getConfig().clampedRegionalDifficulty.cldMinClamp;
             }
-            if(this.localDifficulty > Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim) {
+            if (this.localDifficulty > Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim) {
                 v = Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp;
             }
         } else {
-            if(this.localDifficulty < 2F) {
+            if (this.localDifficulty < 2F) {
                 v = 0F;
             }
-            if(this.localDifficulty > 4F) {
+            if (this.localDifficulty > 4F) {
                 v = 1F;
             }
         }

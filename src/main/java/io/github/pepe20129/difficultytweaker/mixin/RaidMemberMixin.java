@@ -20,7 +20,7 @@ public abstract class RaidMemberMixin {
         int[] arr2 = {5, 5, 6, 6, 6, 7, 7, 7};
         int length2 = arr2.length;
         arr = Arrays.copyOf(arr, length + length2);
-        for(int i=0;i<length2;i++) {
+        for (int i=0;i<length2;i++) {
             arr[length + i] = arr2[i];
         }
         return arr;
@@ -37,7 +37,7 @@ public abstract class RaidMemberMixin {
         int[] arr2 = {2, 3, 3, 4, 4, 5, 5, 6};
         int length2 = arr2.length;
         arr = Arrays.copyOf(arr, length + length2);
-        for(int i=0;i<length2;i++) {
+        for (int i=0;i<length2;i++) {
             arr[length + i] = arr2[i];
         }
         return arr;
@@ -54,7 +54,7 @@ public abstract class RaidMemberMixin {
         int[] arr2 = {4, 5, 6, 6, 7, 8, 9, 9};
         int length2 = arr2.length;
         arr = Arrays.copyOf(arr, length + length2);
-        for(int i=0;i<length2;i++) {
+        for (int i=0;i<length2;i++) {
             arr[length + i] = arr2[i];
         }
         return arr;
@@ -71,7 +71,7 @@ public abstract class RaidMemberMixin {
         int[] arr2 = {3, 3, 4, 4, 4, 5, 5, 5};
         int length2 = arr2.length;
         arr = Arrays.copyOf(arr, length + length2);
-        for(int i=0;i<length2;i++) {
+        for (int i=0;i<length2;i++) {
             arr[length + i] = arr2[i];
         }
         return arr;
@@ -88,7 +88,7 @@ public abstract class RaidMemberMixin {
         int[] arr2 = {2, 3, 3, 3, 3, 4, 4, 4};
         int length2 = arr2.length;
         arr = Arrays.copyOf(arr, length + length2);
-        for(int i=0;i<length2;i++) {
+        for (int i=0;i<length2;i++) {
             arr[length + i] = arr2[i];
         }
         return arr;

@@ -4,7 +4,6 @@ import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +19,6 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     @Inject(at = @At("TAIL"), method = "getSafeFallDistance()I", cancellable = true)
     public void getSafeFallDistance(CallbackInfoReturnable<Integer> info) {
-        Reference.getConfig().loadConfig();
         if (Reference.getConfig().mobActive) {
             int i = (int)(getHealth() - getMaxHealth() * Reference.getConfig().mobFall);
             info.setReturnValue(i + 3);
@@ -28,10 +26,7 @@ public abstract class MobEntityMixin extends LivingEntity {
     }
 
     @ModifyVariable(at = @At("STORE"), method = "initEquipment(Lnet/minecraft/world/LocalDifficulty;)V", ordinal = 0)
-    float f(float f) {
-        Reference.getConfig().loadConfig();
-        if(Reference.getConfig().mobActive)
-            return Reference.getConfig().mobArmorProb;
-        return (this.world.getDifficulty() == Difficulty.HARD) ? 0.1F : 0.25F;
+    float modifyArmorChance(float original) {
+        return Reference.getConfig().mobActive ? Reference.getConfig().mobArmorProb : original;
     }
 }

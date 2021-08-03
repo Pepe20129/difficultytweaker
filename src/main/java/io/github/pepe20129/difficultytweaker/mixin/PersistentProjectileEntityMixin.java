@@ -26,7 +26,6 @@ public abstract class PersistentProjectileEntityMixin {
     public void applyEnchantmentEffects(LivingEntity entity, float damageModifier, CallbackInfo ci) {
         int i = EnchantmentHelper.getEquipmentLevel(Enchantments.POWER, entity);
         int j = EnchantmentHelper.getEquipmentLevel(Enchantments.PUNCH, entity);
-        Reference.getConfig().loadConfig();
         if (Reference.getConfig().projectileActive) {
             setDamage((damageModifier * 2.0F) + random.nextGaussian() * 0.25D + Reference.getConfig().projectileBonus);
         } else {

@@ -15,7 +15,7 @@ public class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "LOAD", ordinal = 0 ))
+    @ModifyVariable(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "LOAD", ordinal = 0))
     public int modifyWitherDuration(int original) {
         return Reference.getConfig().witherSkullActive ? Reference.getConfig().witherSkullLength : original;
     }

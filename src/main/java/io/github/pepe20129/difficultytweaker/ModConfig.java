@@ -22,11 +22,14 @@ public class ModConfig {
     }
 
     //region LocalDifficulty
-    public boolean ldActive = false;
-    public float ldStart = 0.75F;
-    public float ldDayTimeClampMax = 1F;
-    public float ldChunkClampMax = 1F;
-    public float ldMoon = 0.25F;
+    public LocalDifficulty localDifficulty = new LocalDifficulty();
+    public static class LocalDifficulty {
+        public boolean ldActive = false;
+        public float ldStart = 0.75F;
+        public float ldDayTimeClampMax = 1F;
+        public float ldChunkClampMax = 1F;
+        public float ldMoon = 0.25F;
+    }
     //endregion
 
     //region Bee
@@ -98,10 +101,13 @@ public class ModConfig {
     //endregion
 
     //region Clamped Regional Difficulty
-    public boolean cldActive = false;
-    public float cldMinClampLim = 2F;
-    public float cldMaxClampLim = 4F;
-    public float cldMinClamp = 0F;
-    public float cldMaxClamp = 1F;
+    public ClampedRegionalDifficulty clampedRegionalDifficulty = new ClampedRegionalDifficulty();
+    public static class ClampedRegionalDifficulty {
+        public boolean cldActive = false;
+        public float cldMinClampLim = 2F;
+        public float cldMaxClampLim = 4F;
+        public float cldMinClamp = 0F;
+        public float cldMaxClamp = 1F;
+    }
     //endregion
 }

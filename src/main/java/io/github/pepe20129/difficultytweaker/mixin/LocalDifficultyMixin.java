@@ -19,20 +19,20 @@ public class LocalDifficultyMixin {
     @Inject(at = @At("HEAD"), method = "setLocalDifficulty(Lnet/minecraft/world/Difficulty;JJF)F", cancellable = true)
 	private void setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> info) {
         Reference.getConfig().loadConfig();
-        if(Reference.getConfig().ldActive) {
-            float everything = Reference.getConfig().ldStart;
+        if(Reference.getConfig().localDifficulty.ldActive) {
+            float everything = Reference.getConfig().localDifficulty.ldStart;
 
             //1 day = 24k ticks
             //(timeOfDay-3days/60days clamped between 0 & 1.5) *.25
-            float dayTimeFactor = MathHelper.clamp(((float)timeOfDay + -72000.0F) / 1440000.0F, 0.0F, Reference.getConfig().ldDayTimeClampMax) * 0.25F;
+            float dayTimeFactor = MathHelper.clamp(((float)timeOfDay + -72000.0F) / 1440000.0F, 0.0F, Reference.getConfig().localDifficulty.ldDayTimeClampMax) * 0.25F;
             everything += dayTimeFactor;
             float chunkAndMoonFactor = 0.0F;
 
             //Add between 0 & 1.5 depending on Inhabitation. max 150 days
-            chunkAndMoonFactor += MathHelper.clamp((float)inhabitedTime / 3600000.0F, 0.0F, Reference.getConfig().ldChunkClampMax) * 1.25F;
+            chunkAndMoonFactor += MathHelper.clamp((float)inhabitedTime / 3600000.0F, 0.0F, Reference.getConfig().localDifficulty.ldChunkClampMax) * 1.25F;
 
             //Add between 0 & dayTimeFactor depending on moonSize
-            chunkAndMoonFactor += MathHelper.clamp(moonSize * Reference.getConfig().ldMoon, 0.0F, dayTimeFactor);
+            chunkAndMoonFactor += MathHelper.clamp(moonSize * Reference.getConfig().localDifficulty.ldMoon, 0.0F, dayTimeFactor);
             everything += chunkAndMoonFactor;
 
             info.setReturnValue(3 * everything);
@@ -70,12 +70,12 @@ public class LocalDifficultyMixin {
     private void getClampedLocalDifficulty(CallbackInfoReturnable<Float> info) {
         float v = (this.localDifficulty - 2F) / 2F;
         Reference.getConfig().loadConfig();
-        if(Reference.getConfig().cldActive) {
-            if(this.localDifficulty < Reference.getConfig().cldMinClampLim) {
-                v = Reference.getConfig().cldMinClamp;
+        if(Reference.getConfig().clampedRegionalDifficulty.cldActive) {
+            if(this.localDifficulty < Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim) {
+                v = Reference.getConfig().clampedRegionalDifficulty.cldMinClamp;
             }
-            if(this.localDifficulty > Reference.getConfig().cldMaxClampLim) {
-                v = Reference.getConfig().cldMaxClamp;
+            if(this.localDifficulty > Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim) {
+                v = Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp;
             }
         } else {
             if(this.localDifficulty < 2F) {

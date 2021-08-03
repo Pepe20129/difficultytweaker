@@ -49,7 +49,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().ldActive) {
+						if(Reference.getConfig().localDifficulty.ldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -62,7 +62,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						Reference.getConfig().ldActive = a;
+						Reference.getConfig().localDifficulty.ldActive = a;
 						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe local difficulty mixin is now §aactivated§r.");
@@ -77,7 +77,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldStartNode = CommandManager
 					.literal("start")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().ldStart + "]§r";
+						String a = "§l[" + Reference.getConfig().localDifficulty.ldStart + "]§r";
 						sendText(context, "\nSets the starting value for the mixin.\nDefault value: §l[0.75]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -86,7 +86,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("start", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "start");
-						Reference.getConfig().ldStart = a;
+						Reference.getConfig().localDifficulty.ldStart = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's start value is now " + a);
 						return 1;
@@ -97,7 +97,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldDayTimeClampMaxNode = CommandManager
 					.literal("dayTimeClampMax")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().ldDayTimeClampMax + "]§r";
+						String a = "§l[" + Reference.getConfig().localDifficulty.ldDayTimeClampMax + "]§r";
 						sendText(context, "\nSets the maximum clamping value of the day time factor for the mixin.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -106,7 +106,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("dtcm", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "dtcm");
-						Reference.getConfig().ldDayTimeClampMax = a;
+						Reference.getConfig().localDifficulty.ldDayTimeClampMax = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the day time factor is now " + a);
 						return 1;
@@ -117,7 +117,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldChunkClampMaxNode = CommandManager
 					.literal("chunkClampMax")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().ldChunkClampMax + "]§r";
+						String a = "§l[" + Reference.getConfig().localDifficulty.ldChunkClampMax + "]§r";
 						sendText(context, "\nSets the maximum clamping value of the chunk factor for the mixin.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -126,7 +126,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("ccm", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "ccm");
-						Reference.getConfig().ldChunkClampMax = a;
+						Reference.getConfig().localDifficulty.ldChunkClampMax = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the chunk factor is now " + a);
 						return 1;
@@ -137,7 +137,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldMoonNode = CommandManager
 					.literal("moon")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().ldMoon + "]§r";
+						String a = "§l[" + Reference.getConfig().localDifficulty.ldMoon + "]§r";
 						sendText(context, "\nSets the value that the moon factor is multiplied by in the mixin.\nDefault value: §l[0.25]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -146,7 +146,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("moon", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "moon");
-						Reference.getConfig().ldMoon = a;
+						Reference.getConfig().localDifficulty.ldMoon = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's factor multiplier is now " + a);
 						return 1;
@@ -1002,7 +1002,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(Reference.getConfig().cldActive) {
+						if(Reference.getConfig().clampedRegionalDifficulty.cldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -1015,7 +1015,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						Reference.getConfig().cldActive = a;
+						Reference.getConfig().clampedRegionalDifficulty.cldActive = a;
 						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe clamped local difficulty mixin is now §aactivated§r.");
@@ -1030,7 +1030,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMinClampLimNode = CommandManager
 					.literal("minClampLim")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().cldMinClampLim + "]§r";
+						String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim + "]§r";
 						sendText(context, "\n.\nDefault value: §l[2.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1039,7 +1039,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						Reference.getConfig().cldMinClampLim = a;
+						Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe lower clamping limit is now §l[" + a + "]§r.");
 						return 1;
@@ -1050,7 +1050,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMaxClampLimNode = CommandManager
 					.literal("maxClampLim")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().cldMaxClampLim + "]§r";
+						String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim + "]§r";
 						sendText(context, "\n.\nDefault value: §l[4.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1059,7 +1059,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						Reference.getConfig().cldMaxClampLim = a;
+						Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe upper clamping limit is now §l[" + a + "]§r.");
 						return 1;
@@ -1070,7 +1070,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMinClampNode = CommandManager
 					.literal("minClamp")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().cldMinClamp + "]§r";
+						String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMinClamp + "]§r";
 						sendText(context, "\n.\nDefault value: §l[0.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1079,7 +1079,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						Reference.getConfig().cldMinClamp = a;
+						Reference.getConfig().clampedRegionalDifficulty.cldMinClamp = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe lower clamping value is now §l[" + a + "]§r.");
 						return 1;
@@ -1090,7 +1090,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMaxClampNode = CommandManager
 					.literal("maxClamp")
 					.executes(context -> {
-						String a = "§l[" + Reference.getConfig().cldMaxClamp + "]§r";
+						String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp + "]§r";
 						sendText(context, "\n.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1099,7 +1099,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						Reference.getConfig().cldMaxClamp = a;
+						Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp = a;
 						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe upper clamping value is now §l[" + a + "]§r.");
 						return 1;

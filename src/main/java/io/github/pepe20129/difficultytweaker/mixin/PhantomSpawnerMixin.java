@@ -1,6 +1,7 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
 import io.github.pepe20129.difficultytweaker.CommandVars;
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
@@ -33,8 +34,8 @@ public class PhantomSpawnerMixin {
     /*
     @ModifyVariable(at = @At("STORE"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 3)
     int l(int l) {
-        if(CommandVars.phantomActive)
-            return CommandVars.phantomMin + ThreadLocalRandom.current().nextInt(CommandVars.phantomMax - CommandVars.phantomMin);
+        if(Reference.getConfig().phantomActive)
+            return Reference.getConfig().phantomMin + ThreadLocalRandom.current().nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
         return 1 + ThreadLocalRandom.current().nextInt(lv3.getGlobalDifficulty().getId() + 1);
     }
      */
@@ -93,9 +94,9 @@ public class PhantomSpawnerMixin {
 
             EntityData lv8 = null;
             int l;
-            CommandVars.loadConfig();
-            if(CommandVars.phantomActive) {
-                l = CommandVars.phantomMin + random.nextInt(CommandVars.phantomMax - CommandVars.phantomMin);
+            Reference.getConfig().loadConfig();
+            if(Reference.getConfig().phantomActive) {
+                l = Reference.getConfig().phantomMin + random.nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
             } else {
                 l = 1 + random.nextInt(lv3.getGlobalDifficulty().getId() + 1);
             }

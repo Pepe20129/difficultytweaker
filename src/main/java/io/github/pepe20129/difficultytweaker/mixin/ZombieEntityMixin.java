@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.HostileEntity;
@@ -32,9 +33,9 @@ public class ZombieEntityMixin extends HostileEntity {
             v = 0.01F;
         }
 
-        CommandVars.loadConfig();
-        if (CommandVars.zombieActive) {
-            v = CommandVars.zombieWeaponChance;
+        Reference.getConfig().loadConfig();
+        if (Reference.getConfig().zombieActive) {
+            v = Reference.getConfig().zombieWeaponChance;
         }
         if (this.random.nextFloat() < v) {
             int i = this.random.nextInt(3);

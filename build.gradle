@@ -50,6 +50,8 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
 	*/
+
+	implementation 'com.moandjiezana.toml:toml4j:0.7.2'
 }
 
 processResources {

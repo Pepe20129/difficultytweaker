@@ -3,23 +3,20 @@ package io.github.pepe20129.difficultytweaker;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import java.io.File;
-
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
-import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.FloatArgumentType.getFloat;
+import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 
 public class DifficultyTweakerMod implements ModInitializer {
 	public void sendText(CommandContext<ServerCommandSource> context, String string) throws CommandSyntaxException {
@@ -52,7 +49,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.ldActive) {
+						if(Reference.getConfig().ldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -65,8 +62,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.ldActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().ldActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe local difficulty mixin is now §aactivated§r.");
 						} else {
@@ -80,7 +77,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldStartNode = CommandManager
 					.literal("start")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.ldStart + "]§r";
+						String a = "§l[" + Reference.getConfig().ldStart + "]§r";
 						sendText(context, "\nSets the starting value for the mixin.\nDefault value: §l[0.75]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -89,8 +86,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("start", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "start");
-						CommandVars.ldStart = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().ldStart = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's start value is now " + a);
 						return 1;
 					}).build();
@@ -100,7 +97,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldDayTimeClampMaxNode = CommandManager
 					.literal("dayTimeClampMax")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.ldDayTimeClampMax + "]§r";
+						String a = "§l[" + Reference.getConfig().ldDayTimeClampMax + "]§r";
 						sendText(context, "\nSets the maximum clamping value of the day time factor for the mixin.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -109,8 +106,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("dtcm", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "dtcm");
-						CommandVars.ldDayTimeClampMax = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().ldDayTimeClampMax = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the day time factor is now " + a);
 						return 1;
 					}).build();
@@ -120,7 +117,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldChunkClampMaxNode = CommandManager
 					.literal("chunkClampMax")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.ldChunkClampMax + "]§r";
+						String a = "§l[" + Reference.getConfig().ldChunkClampMax + "]§r";
 						sendText(context, "\nSets the maximum clamping value of the chunk factor for the mixin.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -129,8 +126,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("ccm", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "ccm");
-						CommandVars.ldChunkClampMax = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().ldChunkClampMax = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's maximum clamping value of the chunk factor is now " + a);
 						return 1;
 					}).build();
@@ -140,7 +137,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> ldMoonNode = CommandManager
 					.literal("moon")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.ldMoon + "]§r";
+						String a = "§l[" + Reference.getConfig().ldMoon + "]§r";
 						sendText(context, "\nSets the value that the moon factor is multiplied by in the mixin.\nDefault value: §l[0.25]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -149,8 +146,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("moon", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "moon");
-						CommandVars.ldMoon = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().ldMoon = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe local difficulty mixin's factor multiplier is now " + a);
 						return 1;
 					}).build();
@@ -171,7 +168,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.beeActive) {
+						if(Reference.getConfig().beeActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -184,8 +181,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.beeActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().beeActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe bee mixin is now §aactivated§r.");
 						} else {
@@ -199,7 +196,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> beeLengthNode = CommandManager
 					.literal("length")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.beeLength + "]§r";
+						String a = "§l[" + Reference.getConfig().beeLength + "]§r";
 						sendText(context, "\nSets the seconds that bees poison you for.\nDefault value: §l[18]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -208,8 +205,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("length", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "length");
-						CommandVars.beeLength = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().beeLength = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe bee poison length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -230,7 +227,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.caveSpiderActive) {
+						if(Reference.getConfig().caveSpiderActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -243,8 +240,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.caveSpiderActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().caveSpiderActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe cave spider mixin is now §aactivated§r.");
 						} else {
@@ -258,7 +255,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> caveSpiderLengthNode = CommandManager
 					.literal("length")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.caveSpiderLength + "]§r";
+						String a = "§l[" + Reference.getConfig().caveSpiderLength + "]§r";
 						sendText(context, "\nSets the seconds that cave spiders poison you for.\nDefault value: §l[15]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -267,8 +264,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("length", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "length");
-						CommandVars.caveSpiderLength = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().caveSpiderLength = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe cave spider poison length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -289,7 +286,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.skeletonActive) {
+						if(Reference.getConfig().skeletonActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -302,8 +299,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.skeletonActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().skeletonActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe skeleton mixin is now §aactivated§r.");
 						} else {
@@ -317,7 +314,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> skeletonDivergenceNode = CommandManager
 					.literal("divergence")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.skeletonDivergence + "]§r";
+						String a = "§l[" + Reference.getConfig().skeletonDivergence + "]§r";
 						sendText(context, "\nSets skeletons' arrows divergence.\nDefault value: §l[2]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -326,8 +323,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("divergence", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "divergence");
-						CommandVars.skeletonDivergence = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().skeletonDivergence = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nSkeletons' arrows divergence is §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -337,7 +334,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> skeletonCooldownNode = CommandManager
 					.literal("cooldown")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.skeletonCooldown + "]§r";
+						String a = "§l[" + Reference.getConfig().skeletonCooldown + "]§r";
 						sendText(context, "\nSets skeletons' cooldown.\nDefault value: §l[20]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -346,8 +343,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("cooldown", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "cooldown");
-						CommandVars.skeletonCooldown = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().skeletonCooldown = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nSkeletons' cooldown is §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -368,7 +365,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.fireActive) {
+						if(Reference.getConfig().fireActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -381,8 +378,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.fireActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().fireActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe fire mixin is now §aactivated§r.");
 						} else {
@@ -396,7 +393,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> fireEncouragementNode = CommandManager
 					.literal("encouragement")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.fireEncouragement + "]§r";
+						String a = "§l[" + Reference.getConfig().fireEncouragement + "]§r";
 						sendText(context, "\nSets the extra value of encouragement for fire before accounting for rain & environmental factors.\nDefault value: §l[61]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -405,8 +402,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("encouragement", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "encouragement");
-						CommandVars.fireEncouragement = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().fireEncouragement = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe extra fire encouragement is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -427,7 +424,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.netherPortalActive) {
+						if(Reference.getConfig().netherPortalActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -440,8 +437,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.netherPortalActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().netherPortalActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe nether portal mixin is now §aactivated§r.");
 						} else {
@@ -455,7 +452,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> netherPortalProbNode = CommandManager
 					.literal("probability")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.netherPortalProb + "/2000]§r";
+						String a = "§l[" + Reference.getConfig().netherPortalProb + "/2000]§r";
 						sendText(context, "\nSets the probability of a zombified piglin spawning on a nether portal.\nDefault value: §l[3/2000]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -464,8 +461,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("probability", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "probability");
-						CommandVars.netherPortalProb = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().netherPortalProb = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe probability is now §l[" + a + "/2000]§r.");
 						return 1;
 					}).build();
@@ -486,7 +483,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.mobActive) {
+						if(Reference.getConfig().mobActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -499,8 +496,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.mobActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().mobActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe mob armor mixin is now §aactivated§r.");
 						} else {
@@ -514,7 +511,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> mobArmorValueNode = CommandManager
 					.literal("prob")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.mobArmorProb + "]§r";
+						String a = "§l[" + Reference.getConfig().mobArmorProb + "]§r";
 						sendText(context, "\nSets the value used for the mob armor calculation.\nDefault value: §l[0.1]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -523,8 +520,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.mobArmorProb = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().mobArmorProb = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe probability is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -534,7 +531,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> mobFallNode = CommandManager
 					.literal("fall")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.mobFall + "]§r";
+						String a = "§l[" + Reference.getConfig().mobFall + "]§r";
 						sendText(context, "\nSets the distance mobs are willing to fall in % from their max health (0-1).\nDefault value: §l[0.33]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -547,8 +544,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 							a = 1;
 						if(a < 0)
 							a = 0;
-						CommandVars.mobFall = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().mobFall = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -569,7 +566,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.projectileActive) {
+						if(Reference.getConfig().projectileActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -582,8 +579,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.projectileActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().projectileActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe projectile mixin is now §aactivated§r.");
 						} else {
@@ -597,7 +594,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> projectileValueNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.projectileBonus + "]§r";
+						String a = "§l[" + Reference.getConfig().projectileBonus + "]§r";
 						sendText(context, "\nSets the bonus damage for projectiles.\nDefault value: §l[0.33]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -606,8 +603,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.projectileBonus = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().projectileBonus = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe damage bonus is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -628,7 +625,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.playerActive) {
+						if(Reference.getConfig().playerActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -641,8 +638,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.playerActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().playerActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe player mixin is now §aactivated§r.");
 						} else {
@@ -656,7 +653,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> playerMultiplierNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.playerMultiplier + "]§r";
+						String a = "§l[" + Reference.getConfig().playerMultiplier + "]§r";
 						sendText(context, "\nSets the bonus dmg for projectiles.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -665,8 +662,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.playerMultiplier = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().playerMultiplier = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe damage multiplier is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -687,7 +684,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.raidActive) {
+						if(Reference.getConfig().raidActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -700,8 +697,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.raidActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().raidActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe raid mixin is now §aactivated§r.");
 						} else {
@@ -715,7 +712,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> raidCountNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.raidCount + "]§r";
+						String a = "§l[" + Reference.getConfig().raidCount + "]§r";
 						sendText(context, "\nSets the amount of waves (capped to 15).\nDefault value: §l[7]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -726,8 +723,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 						int a = getInteger(context, "value");
 						if (a > 15)
 							a = 15;
-						CommandVars.raidCount = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().raidCount = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe raid count is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -748,7 +745,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.witherSkullActive) {
+						if(Reference.getConfig().witherSkullActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -761,8 +758,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.witherSkullActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().witherSkullActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe wither skull mixin is now §aactivated§r.");
 						} else {
@@ -776,7 +773,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> witherSkullLengthNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.witherSkullLength + "]§r";
+						String a = "§l[" + Reference.getConfig().witherSkullLength + "]§r";
 						sendText(context, "\nSets the effect's length.\nDefault value: §l[40]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -785,8 +782,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						CommandVars.witherSkullLength = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().witherSkullLength = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe effect's length is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -807,7 +804,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.zombieActive) {
+						if(Reference.getConfig().zombieActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -820,8 +817,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.zombieActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().zombieActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe zombie mixin is now §aactivated§r.");
 						} else {
@@ -835,7 +832,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> zombieChanceNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.zombieWeaponChance + "]§r";
+						String a = "§l[" + Reference.getConfig().zombieWeaponChance + "]§r";
 						sendText(context, "\nSets the effect's length.\nDefault value: §l[0.1]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -844,8 +841,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						CommandVars.zombieWeaponChance = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().zombieWeaponChance = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe weapon chance is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -865,7 +862,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.guardianActive) {
+						if(Reference.getConfig().guardianActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -878,8 +875,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.guardianActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().guardianActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe guardian mixin is now §aactivated§r.");
 						} else {
@@ -893,7 +890,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> guardianValueNode = CommandManager
 					.literal("value")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.guardianAmount + "]§r";
+						String a = "§l[" + Reference.getConfig().guardianAmount + "]§r";
 						sendText(context, "\nSets the bonus damage for guardian laser before damage scaling.\nDefault value: §l[0.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -902,8 +899,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.guardianAmount = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().guardianAmount = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe damage bonus is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -923,7 +920,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.phantomActive) {
+						if(Reference.getConfig().phantomActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -936,8 +933,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.phantomActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().phantomActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe phantom mixin is now §aactivated§r.");
 						} else {
@@ -951,7 +948,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> phantomMinNode = CommandManager
 					.literal("min")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.phantomMin + "]§r";
+						String a = "§l[" + Reference.getConfig().phantomMin + "]§r";
 						sendText(context, "\nSets the minimum amount of phantoms that spawn in each group.\nForced to be smaller than the maximum value.\nDefault value: §l[1]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -960,10 +957,10 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						if(a >= CommandVars.phantomMax)
-							a = CommandVars.phantomMax - 1;
-						CommandVars.phantomMin = a;
-						CommandVars.saveConfig();
+						if(a >= Reference.getConfig().phantomMax)
+							a = Reference.getConfig().phantomMax - 1;
+						Reference.getConfig().phantomMin = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe minimum amount is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -973,7 +970,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> phantomMaxNode = CommandManager
 					.literal("max")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.phantomMax + "]§r";
+						String a = "§l[" + Reference.getConfig().phantomMax + "]§r";
 						sendText(context, "\nSets the maximum amount of phantoms that spawn in each group.\nForced to be bigger than the minimum value.\nDefault value: §l[2]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -982,10 +979,10 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", IntegerArgumentType.integer())
 					.executes(context -> {
 						int a = getInteger(context, "value");
-						if(a <= CommandVars.phantomMin)
-							a = CommandVars.phantomMin + 1;
-						CommandVars.phantomMax = a;
-						CommandVars.saveConfig();
+						if(a <= Reference.getConfig().phantomMin)
+							a = Reference.getConfig().phantomMin + 1;
+						Reference.getConfig().phantomMax = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe maximum amount is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1005,7 +1002,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.literal("active")
 					.executes(context -> {
 						String a;
-						if(CommandVars.cldActive) {
+						if(Reference.getConfig().cldActive) {
 							a = "§a§l[true]§r";
 						} else {
 							a = "§c§l[false]§r";
@@ -1018,8 +1015,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("active", BoolArgumentType.bool())
 					.executes(context -> {
 						boolean a = getBool(context, "active");
-						CommandVars.cldActive = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().cldActive = a;
+						Reference.getConfig().saveConfig();
 						if(a) {
 							sendText(context, "\nThe clamped local difficulty mixin is now §aactivated§r.");
 						} else {
@@ -1033,7 +1030,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMinClampLimNode = CommandManager
 					.literal("minClampLim")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.cldMinClampLim + "]§r";
+						String a = "§l[" + Reference.getConfig().cldMinClampLim + "]§r";
 						sendText(context, "\n.\nDefault value: §l[2.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1042,8 +1039,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.cldMinClampLim = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().cldMinClampLim = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe lower clamping limit is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1053,7 +1050,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMaxClampLimNode = CommandManager
 					.literal("maxClampLim")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.cldMaxClampLim + "]§r";
+						String a = "§l[" + Reference.getConfig().cldMaxClampLim + "]§r";
 						sendText(context, "\n.\nDefault value: §l[4.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1062,8 +1059,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.cldMaxClampLim = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().cldMaxClampLim = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe upper clamping limit is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1073,7 +1070,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMinClampNode = CommandManager
 					.literal("minClamp")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.cldMinClamp + "]§r";
+						String a = "§l[" + Reference.getConfig().cldMinClamp + "]§r";
 						sendText(context, "\n.\nDefault value: §l[0.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1082,8 +1079,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.cldMinClamp = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().cldMinClamp = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe lower clamping value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();
@@ -1093,7 +1090,7 @@ public class DifficultyTweakerMod implements ModInitializer {
 			LiteralCommandNode<ServerCommandSource> cldMaxClampNode = CommandManager
 					.literal("maxClamp")
 					.executes(context -> {
-						String a = "§l[" + CommandVars.cldMaxClamp + "]§r";
+						String a = "§l[" + Reference.getConfig().cldMaxClamp + "]§r";
 						sendText(context, "\n.\nDefault value: §l[1.0]§r\nCurrent value: " + a);
 						return 1;
 					}).build();
@@ -1102,8 +1099,8 @@ public class DifficultyTweakerMod implements ModInitializer {
 					.argument("value", FloatArgumentType.floatArg())
 					.executes(context -> {
 						float a = getFloat(context, "value");
-						CommandVars.cldMaxClamp = a;
-						CommandVars.saveConfig();
+						Reference.getConfig().cldMaxClamp = a;
+						Reference.getConfig().saveConfig();
 						sendText(context, "\nThe upper clamping value is now §l[" + a + "]§r.");
 						return 1;
 					}).build();

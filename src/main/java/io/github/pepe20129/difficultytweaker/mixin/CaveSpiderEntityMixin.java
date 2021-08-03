@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -32,9 +33,9 @@ public class CaveSpiderEntityMixin extends SpiderEntity {
                     i = 15;
                 }
 
-                CommandVars.loadConfig();
-                if (CommandVars.caveSpiderActive) {
-                    i = CommandVars.caveSpiderLength;
+                Reference.getConfig().loadConfig();
+                if (Reference.getConfig().caveSpiderActive) {
+                    i = Reference.getConfig().caveSpiderLength;
                 }
 
                 if (i > 0) {

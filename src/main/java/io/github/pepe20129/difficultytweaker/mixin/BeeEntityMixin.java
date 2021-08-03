@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -12,7 +13,6 @@ import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,9 +40,9 @@ public abstract class BeeEntityMixin extends AnimalEntity {
                     i = 18;
                 }
 
-                CommandVars.loadConfig();
-                if (CommandVars.beeActive) {
-                    i = CommandVars.beeLength;
+                Reference.getConfig().loadConfig();
+                if (Reference.getConfig().beeActive) {
+                    i = Reference.getConfig().beeLength;
                 }
 
                 if (i > 0) {

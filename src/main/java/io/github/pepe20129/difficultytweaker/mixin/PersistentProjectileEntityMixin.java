@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -26,9 +27,9 @@ public abstract class PersistentProjectileEntityMixin {
     public void applyEnchantmentEffects(LivingEntity entity, float damageModifier, CallbackInfo ci) {
         int i = EnchantmentHelper.getEquipmentLevel(Enchantments.POWER, entity);
         int j = EnchantmentHelper.getEquipmentLevel(Enchantments.PUNCH, entity);
-        CommandVars.loadConfig();
-        if (CommandVars.projectileActive) {
-            setDamage((damageModifier * 2.0F) + random.nextGaussian() * 0.25D + CommandVars.projectileBonus);
+        Reference.getConfig().loadConfig();
+        if (Reference.getConfig().projectileActive) {
+            setDamage((damageModifier * 2.0F) + random.nextGaussian() * 0.25D + Reference.getConfig().projectileBonus);
         } else {
             setDamage((damageModifier * 2.0F) + random.nextGaussian() * 0.25D + (((ProjectileEntity) (Object) this).world.getDifficulty().getId() * 0.11F));
         }

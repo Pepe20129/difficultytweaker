@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -52,9 +53,9 @@ public class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
                 i = 40;
             }
 
-            CommandVars.loadConfig();
-            if (CommandVars.witherSkullActive) {
-                i = CommandVars.witherSkullLength;
+            Reference.getConfig().loadConfig();
+            if (Reference.getConfig().witherSkullActive) {
+                i = Reference.getConfig().witherSkullLength;
             }
 
             if (i > 0) {

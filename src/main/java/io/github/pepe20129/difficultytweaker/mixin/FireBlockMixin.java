@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;
@@ -105,9 +106,9 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
                         int p = getBurnChance((WorldView)world, (BlockPos)lv3);
                         if (p > 0) {
                             int q = 0;
-                            CommandVars.loadConfig();
-                            if (CommandVars.fireActive) {
-                                q = (p + CommandVars.fireEncouragement) / (i + 30);
+                            Reference.getConfig().loadConfig();
+                            if (Reference.getConfig().fireActive) {
+                                q = (p + Reference.getConfig().fireEncouragement) / (i + 30);
                             } else {
                                 q = (p + 40 + world.getDifficulty().getId() * 7) / (i + 30);
                             }

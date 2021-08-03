@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.village.raid.Raid;
 import net.minecraft.world.Difficulty;
 import io.github.pepe20129.difficultytweaker.CommandVars;
@@ -22,9 +23,9 @@ public class RaidMixin {
         if (difficulty == Difficulty.HARD) {
             v = 7;
         }
-        CommandVars.loadConfig();
-        if (CommandVars.raidActive) {
-            v = CommandVars.raidCount;
+        Reference.getConfig().loadConfig();
+        if (Reference.getConfig().raidActive) {
+            v = Reference.getConfig().raidCount;
         }
         info.setReturnValue(v);
     }

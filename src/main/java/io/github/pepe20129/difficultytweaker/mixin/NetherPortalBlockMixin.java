@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
@@ -26,9 +27,9 @@ public class NetherPortalBlockMixin extends Block {
     @Inject(at = @At("HEAD"), method = "randomTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         int v;
-        CommandVars.loadConfig();
-        if (CommandVars.netherPortalActive) {
-            v = CommandVars.netherPortalProb;
+        Reference.getConfig().loadConfig();
+        if (Reference.getConfig().netherPortalActive) {
+            v = Reference.getConfig().netherPortalProb;
         } else {
             v = world.getDifficulty().getId();
         }

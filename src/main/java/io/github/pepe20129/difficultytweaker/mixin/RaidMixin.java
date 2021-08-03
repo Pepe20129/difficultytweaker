@@ -10,22 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Raid.class)
 public class RaidMixin {
-    @Inject(at = @At("HEAD"), method = "getMaxWaves(Lnet/minecraft/world/Difficulty;)I", cancellable = true)
+
+    @Inject(at = @At("RETURN"), method = "getMaxWaves(Lnet/minecraft/world/Difficulty;)I", cancellable = true)
     public void getMaxWaves(Difficulty difficulty, CallbackInfoReturnable<Integer> info) {
-        int v = 0;
-        if (difficulty == Difficulty.EASY) {
-            v = 3;
-        }
-        if (difficulty == Difficulty.NORMAL) {
-            v = 5;
-        }
-        if (difficulty == Difficulty.HARD) {
-            v = 7;
-        }
         Reference.getConfig().loadConfig();
         if (Reference.getConfig().raidActive) {
-            v = Reference.getConfig().raidCount;
+            info.setReturnValue(Reference.getConfig().raidCount);
         }
-        info.setReturnValue(v);
     }
 }

@@ -23,7 +23,7 @@ import static com.mojang.brigadier.arguments.FloatArgumentType.getFloat;
 
 public class DifficultyTweakerMod implements ModInitializer {
 	public void sendText(CommandContext<ServerCommandSource> context, String string) throws CommandSyntaxException {
-		context.getSource().getMinecraftServer().getPlayerManager().broadcastChatMessage(Text.of(string), MessageType.CHAT, context.getSource().getPlayer().getUuid());
+		context.getSource().getServer().getPlayerManager().broadcastChatMessage(Text.of(string), MessageType.CHAT, context.getSource().getPlayer().getUuid());
 	}
 
 	@Override

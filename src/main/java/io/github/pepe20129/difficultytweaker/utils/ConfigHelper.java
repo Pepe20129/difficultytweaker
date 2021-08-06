@@ -18,7 +18,7 @@ class ConfigHelper {
 
     static void reloadConfig(MinecraftServer server) {
         ModConfig config = new ModConfig();
-        File configFile = getConfigFile(server); // Only for dedicated servers
+        File configFile = getConfigFile(server);
         try {
             if (configFile.exists()) {
                 config = new Toml().read(configFile).to(ModConfig.class);

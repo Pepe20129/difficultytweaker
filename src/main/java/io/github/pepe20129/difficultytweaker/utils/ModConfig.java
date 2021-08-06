@@ -1,8 +1,6 @@
 package io.github.pepe20129.difficultytweaker.utils;
 
 import com.moandjiezana.toml.TomlWriter;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;

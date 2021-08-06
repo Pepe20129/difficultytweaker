@@ -1,15 +1,17 @@
-package io.github.pepe20129.difficultytweaker;
+package io.github.pepe20129.difficultytweaker.utils;
 
 import com.moandjiezana.toml.TomlWriter;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ModConfig {
 
-    public void saveConfig() {
-        File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");;
+    public void saveConfig(MinecraftServer server) {
+        File configFile = ConfigHelper.getConfigFile(server);
         try {
             new TomlWriter().write(this, configFile);
         } catch (IOException e) {

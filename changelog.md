@@ -1,3 +1,10 @@
+Version 0.2.0
+------------------------------------------------------
+ - Implemented per world config saving thanks to macbrayne
+ - Updated to FAPI 0.37.1
+ - Cleaned up code
+
+------------------------------------------------------
 Version 0.1.2
 ------------------------------------------------------
  - Implemented option saving thru config

@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -15,13 +16,11 @@ import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractSkeletonEntity.class)
@@ -31,18 +30,11 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
     }
 
     /*
-    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 0)
-    int i(int i) {
-        if(CommandVars.guardianActive)
-            return CommandVars.skeletonCooldown;
-        return 20;
-    }
-
-    @ModifyVariable(at = @At("STORE"), method = "updateAttackType()V", ordinal = 1)
-    int i2(int i) {
-        if(CommandVars.guardianActive)
-            return CommandVars.skeletonCooldown;
-        return 40;
+    @ModifyVariable(at = @At("LOAD"), method = "updateAttackType()V", ordinal = 0)
+    int modifySkeletonCooldown(int original) {
+        if(Reference.getConfig().skeletonActive)
+            return Reference.getConfig().skeletonCooldown;
+        return original;
     }
     */
 
@@ -64,9 +56,8 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
             if (this.world.getDifficulty() != Difficulty.HARD) {
                 i = 40;
             }
-            CommandVars.loadConfig();
-            if (CommandVars.skeletonActive) {
-                i = CommandVars.skeletonCooldown; //This seems to not work? Maybe not??
+            if (Reference.getConfig().skeletonActive) {
+                i = Reference.getConfig().skeletonCooldown; //This seems to not work? Maybe not??
             }
             this.bowAttackGoal.setAttackInterval(i);
             this.goalSelector.add(4, (Goal)this.bowAttackGoal);
@@ -88,9 +79,8 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
         double g = target.getZ() - getZ();
         double h = Math.sqrt(d * d + g * g);
-        CommandVars.loadConfig();
-        if (CommandVars.skeletonActive) {
-            lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, CommandVars.skeletonDivergence); //This seems to not work?
+        if (Reference.getConfig().skeletonActive) {
+            lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, Reference.getConfig().skeletonDivergence); //This seems to not work?
         } else {
             lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (14 - this.world.getDifficulty().getId() * 4));
         }
@@ -98,17 +88,3 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         return;
     }
 }
-
-/*
-public void attack(LivingEntity target, float pullProgress) {
-    ItemStack lv = getArrowType(getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-    PersistentProjectileEntity lv2 = createArrowProjectile(lv, pullProgress);
-    double d = target.getX() - getX();
-    double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
-    double g = target.getZ() - getZ();
-    double h = Math.sqrt(d * d + g * g);
-    lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (14 - this.world.getDifficulty().getId() * 4));
-    playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRandom().nextFloat() * 0.4F + 0.8F));
-    this.world.spawnEntity((Entity)lv2);
-}
- */

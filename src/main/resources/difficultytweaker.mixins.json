@@ -20,7 +20,9 @@
     "WitherSkullEntityMixin",
     "ZombieEntityMixin"
   ],
-  "client": [],
+  "client": [
+    "MinecraftServerAccessor"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

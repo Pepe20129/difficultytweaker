@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
+import io.github.pepe20129.difficultytweaker.Reference;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.HostileEntity;
@@ -10,7 +11,6 @@ import net.minecraft.item.Items;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
-import io.github.pepe20129.difficultytweaker.CommandVars;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,9 +32,8 @@ public class ZombieEntityMixin extends HostileEntity {
             v = 0.01F;
         }
 
-        CommandVars.loadConfig();
-        if (CommandVars.zombieActive) {
-            v = CommandVars.zombieWeaponChance;
+        if (Reference.getConfig().zombieActive) {
+            v = Reference.getConfig().zombieWeaponChance;
         }
         if (this.random.nextFloat() < v) {
             int i = this.random.nextInt(3);

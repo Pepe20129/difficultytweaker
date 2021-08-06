@@ -26,30 +26,19 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Needed for the command API
-	Object baseAPI = fabricApi.module("fabric-api-base", project.fabric_version);
-	modImplementation baseAPI
-	include baseAPI
+	// Make a collection of all api modules we wish to use
+	Set<String> apiModules = [
+			"fabric-api-base",
+			"fabric-command-api-v1", // Needed for the command API
+			"fabric-lifecycle-events-v1" // Needed for the server started and reload command events
+	]
 
-	// Needed for the command
-	Object commandAPI = fabricApi.module("fabric-command-api-v1", project.fabric_version);
-	modImplementation commandAPI
-	include commandAPI
+	// Add each module as a dependency
+	apiModules.forEach {
+		include(modImplementation(fabricApi.module(it, project.fabric_version)))
+	}
 
-	// Disabled while I figure out how to use cca
-	/*
-	// Replace modImplementation with modApi if you expose components in your own API
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:${project.cca_version}"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cca_version}"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
-
-	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional but recommended)
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-scoreboard:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cca_version}"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cca_version}"
-	*/
+	implementation 'com.moandjiezana.toml:toml4j:0.7.2'
 }
 
 processResources {

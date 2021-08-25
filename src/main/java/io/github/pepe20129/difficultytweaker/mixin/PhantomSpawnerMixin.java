@@ -21,74 +21,62 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
 
     /*
-    @ModifyVariable(at = @At("STORE"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 3)
-    int l(int l) {
-        if(Reference.getConfig().phantomActive)
+    //TODO: Fix, didn't match the target
+    @ModifyVariable(method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", at = @At(value = "STORE", ordinal = 3))
+    int modifyPhantomSpawns(int original) {
+        if (Reference.getConfig().phantomActive) {
+            if (Reference.getConfig().phantomMin == Reference.getConfig().phantomMax)
+                return Reference.getConfig().phantomMin;
             return Reference.getConfig().phantomMin + ThreadLocalRandom.current().nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
-        return 1 + ThreadLocalRandom.current().nextInt(lv3.getGlobalDifficulty().getId() + 1);
+        }
+        return original;
     }
-     */
-
+    */
 
     @Shadow private int ticksUntilNextSpawn;
     @Inject(at = @At("HEAD"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", cancellable = true)
     public void spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfoReturnable<Integer> info) {
-        if (!spawnMonsters) {
+        if (!spawnMonsters)
             info.setReturnValue(0);
-            }
-
-        if (!world.getGameRules().getBoolean(GameRules.DO_INSOMNIA)) {
+        if (!world.getGameRules().getBoolean(GameRules.DO_INSOMNIA))
             info.setReturnValue(0);
-        }
-
         Random random = world.random;
-
         this.ticksUntilNextSpawn--;
-        if (this.ticksUntilNextSpawn > 0) {
+        if (this.ticksUntilNextSpawn > 0)
             info.setReturnValue(0);
-        }
         this.ticksUntilNextSpawn += (60 + random.nextInt(60)) * 20;
-
-        if (world.getAmbientDarkness() < 5 && world.getDimension().hasSkyLight()) {
+        if (world.getAmbientDarkness() < 5 && world.getDimension().hasSkyLight())
             info.setReturnValue(0);
-        }
-
         int i = 0;
         for (PlayerEntity lv : world.getPlayers()) {
-            if (lv.isSpectator()) {
+            if (lv.isSpectator())
                 continue;
-            }
             BlockPos lv2 = lv.getBlockPos();
-            if (world.getDimension().hasSkyLight() && (lv2.getY() < world.getSeaLevel() || !world.isSkyVisible(lv2))) {
+            if (world.getDimension().hasSkyLight() && (lv2.getY() < world.getSeaLevel() || !world.isSkyVisible(lv2)))
                 continue;
-            }
             LocalDifficulty lv3 = world.getLocalDifficulty(lv2);
-            if (!lv3.isHarderThan(random.nextFloat() * 3.0F)) {
+            if (!lv3.isHarderThan(random.nextFloat() * 3.0F))
                 continue;
-            }
-
-            ServerStatHandler lv4 = ((ServerPlayerEntity)lv).getStatHandler();
+            ServerStatHandler lv4 = ((ServerPlayerEntity) lv).getStatHandler();
             int j = MathHelper.clamp(lv4.getStat(Stats.CUSTOM.getOrCreateStat(Stats.TIME_SINCE_REST)), 1, 2147483647);
             int k = 24000;
-            if (random.nextInt(j) < 72000) {
+            if (random.nextInt(j) < 72000)
                 continue;
-            }
-
             BlockPos lv5 = lv2.up(20 + random.nextInt(15)).east(-10 + random.nextInt(21)).south(-10 + random.nextInt(21));
             BlockState lv6 = world.getBlockState(lv5);
             FluidState lv7 = world.getFluidState(lv5);
-            if (!SpawnHelper.isClearForSpawn((BlockView)world, lv5, lv6, lv7, EntityType.PHANTOM)) {
+            if (!SpawnHelper.isClearForSpawn((BlockView) world, lv5, lv6, lv7, EntityType.PHANTOM))
                 continue;
-            }
-
             EntityData lv8 = null;
             int l;
             if (Reference.getConfig().phantomActive) {
@@ -97,10 +85,10 @@ public class PhantomSpawnerMixin {
                 l = 1 + random.nextInt(lv3.getGlobalDifficulty().getId() + 1);
             }
             for (int m = 0; m < l; m++) {
-                PhantomEntity lv9 = (PhantomEntity) EntityType.PHANTOM.create((World)world);
+                PhantomEntity lv9 = (PhantomEntity) EntityType.PHANTOM.create((World) world);
                 lv9.refreshPositionAndAngles(lv5, 0.0F, 0.0F);
-                lv8 = lv9.initialize((ServerWorldAccess)world, lv3, SpawnReason.NATURAL, lv8, null);
-                world.spawnEntityAndPassengers((Entity)lv9);
+                lv8 = lv9.initialize((ServerWorldAccess) world, lv3, SpawnReason.NATURAL, lv8, null);
+                world.spawnEntityAndPassengers((Entity) lv9);
             }
             i += l;
         }

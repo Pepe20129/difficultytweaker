@@ -28,6 +28,20 @@ public class FabricCommonCommandRegistration {
                     return 1;
                 }).build();
 
+        LiteralCommandNode<ServerCommandSource> entityNode = CommandManager
+                .literal("entity")
+                .executes(context -> {
+                    sendText(context, "\nEverything related to entities.");
+                    return 1;
+                }).build();
+
+        LiteralCommandNode<ServerCommandSource> worldNode = CommandManager
+                .literal("world")
+                .executes(context -> {
+                    sendText(context, "\nEverything related to the world.");
+                    return 1;
+                }).build();
+
         //region LocalDifficulty
         LiteralCommandNode<ServerCommandSource> localDifficultyNode = CommandManager
                 .literal("localDifficulty")
@@ -1104,7 +1118,10 @@ public class FabricCommonCommandRegistration {
         //There has to be a better way to do this.
         dispatcher.getRoot().addChild(difficultyTweakerNode);
 
-        difficultyTweakerNode.addChild(localDifficultyNode);
+        difficultyTweakerNode.addChild(entityNode);
+        difficultyTweakerNode.addChild(worldNode);
+
+        worldNode.addChild(localDifficultyNode);
         localDifficultyNode.addChild(ldActiveNode);
         ldActiveNode.addChild(ldActiveVNode);
         localDifficultyNode.addChild(ldStartNode);
@@ -1116,19 +1133,19 @@ public class FabricCommonCommandRegistration {
         localDifficultyNode.addChild(ldMoonNode);
         ldMoonNode.addChild(ldMoonVNode);
 
-        difficultyTweakerNode.addChild(beeNode);
+        entityNode.addChild(beeNode);
         beeNode.addChild(beeActiveNode);
         beeActiveNode.addChild(beeActiveVNode);
         beeNode.addChild(beeLengthNode);
         beeLengthNode.addChild(beeLengthVNode);
 
-        difficultyTweakerNode.addChild(caveSpiderNode);
+        entityNode.addChild(caveSpiderNode);
         caveSpiderNode.addChild(caveSpiderActiveNode);
         caveSpiderActiveNode.addChild(caveSpiderActiveVNode);
         caveSpiderNode.addChild(caveSpiderLengthNode);
         caveSpiderLengthNode.addChild(caveSpiderLengthVNode);
 
-        difficultyTweakerNode.addChild(skeletonNode);
+        entityNode.addChild(skeletonNode);
         skeletonNode.addChild(skeletonActiveNode);
         skeletonActiveNode.addChild(skeletonActiveVNode);
         skeletonNode.addChild(skeletonDivergenceNode);
@@ -1136,19 +1153,19 @@ public class FabricCommonCommandRegistration {
         skeletonNode.addChild(skeletonCooldownNode);
         skeletonCooldownNode.addChild(skeletonCooldownVNode);
 
-        difficultyTweakerNode.addChild(fireNode);
+        worldNode.addChild(fireNode);
         fireNode.addChild(fireActiveNode);
         fireActiveNode.addChild(fireActiveVNode);
         fireNode.addChild(fireEncouragementNode);
         fireEncouragementNode.addChild(fireEncouragementVNode);
 
-        difficultyTweakerNode.addChild(netherPortalNode);
+        worldNode.addChild(netherPortalNode);
         netherPortalNode.addChild(netherPortalActiveNode);
         netherPortalActiveNode.addChild(netherPortalActiveVNode);
         netherPortalNode.addChild(netherPortalProbNode);
         netherPortalProbNode.addChild(netherPortalProbVNode);
 
-        difficultyTweakerNode.addChild(mobNode);
+        entityNode.addChild(mobNode);
         mobNode.addChild(mobActiveNode);
         mobActiveNode.addChild(mobActiveVNode);
         mobNode.addChild(mobArmorValueNode);
@@ -1156,43 +1173,43 @@ public class FabricCommonCommandRegistration {
         mobNode.addChild(mobFallNode);
         mobFallNode.addChild(mobFallVNode);
 
-        difficultyTweakerNode.addChild(projectileNode);
+        entityNode.addChild(projectileNode);
         projectileNode.addChild(projectileActiveNode);
         projectileActiveNode.addChild(projectileActiveVNode);
         projectileNode.addChild(projectileValueNode);
         projectileValueNode.addChild(projectileValueVNode);
 
-        difficultyTweakerNode.addChild(playerNode);
+        entityNode.addChild(playerNode);
         playerNode.addChild(playerActiveNode);
         playerActiveNode.addChild(playerActiveVNode);
         playerNode.addChild(playerMultiplierNode);
         playerMultiplierNode.addChild(playerMultiplierVNode);
 
-        difficultyTweakerNode.addChild(raidNode);
+        worldNode.addChild(raidNode);
         raidNode.addChild(raidActiveNode);
         raidActiveNode.addChild(raidActiveVNode);
         raidNode.addChild(raidCountNode);
         raidCountNode.addChild(raidCountVNode);
 
-        difficultyTweakerNode.addChild(witherSkullNode);
+        entityNode.addChild(witherSkullNode);
         witherSkullNode.addChild(witherSkullActiveNode);
         witherSkullActiveNode.addChild(witherSkullActiveVNode);
         witherSkullNode.addChild(witherSkullLengthNode);
         witherSkullLengthNode.addChild(witherSkullLengthVNode);
 
-        difficultyTweakerNode.addChild(zombieNode);
+        entityNode.addChild(zombieNode);
         zombieNode.addChild(zombieActiveNode);
         zombieActiveNode.addChild(zombieActiveVNode);
         zombieNode.addChild(zombieChanceNode);
         zombieChanceNode.addChild(zombieChanceVNode);
 
-        difficultyTweakerNode.addChild(guardianNode);
+        entityNode.addChild(guardianNode);
         guardianNode.addChild(guardianActiveNode);
         guardianActiveNode.addChild(guardianActiveVNode);
         guardianNode.addChild(guardianValueNode);
         guardianValueNode.addChild(guardianValueVNode);
 
-        difficultyTweakerNode.addChild(phantomNode);
+        entityNode.addChild(phantomNode);
         phantomNode.addChild(phantomActiveNode);
         phantomActiveNode.addChild(phantomActiveVNode);
         phantomNode.addChild(phantomMinNode);
@@ -1200,7 +1217,7 @@ public class FabricCommonCommandRegistration {
         phantomNode.addChild(phantomMaxNode);
         phantomMaxNode.addChild(phantomMaxVNode);
 
-        difficultyTweakerNode.addChild(clampedLocalDifficultyNode);
+        worldNode.addChild(clampedLocalDifficultyNode);
         clampedLocalDifficultyNode.addChild(cldActiveNode);
         cldActiveNode.addChild(cldActiveVNode);
         clampedLocalDifficultyNode.addChild(cldMinClampLimNode);

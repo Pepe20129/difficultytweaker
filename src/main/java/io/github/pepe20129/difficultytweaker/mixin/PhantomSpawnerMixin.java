@@ -32,11 +32,11 @@ public class PhantomSpawnerMixin {
 
     /*
     //TODO: Fix, didn't match the target
-    @ModifyVariable(method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", at = @At(value = "STORE", ordinal = 3))
+    @ModifyVariable(at = @At(value = "STORE"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 3)
     int modifyPhantomSpawns(int original) {
         if (Reference.getConfig().phantomActive) {
-            if (Reference.getConfig().phantomMin == Reference.getConfig().phantomMax)
-                return Reference.getConfig().phantomMin;
+            if (Reference.getConfig().phantomMin >= Reference.getConfig().phantomMax)
+                return Reference.getConfig().phantomMax;
             return Reference.getConfig().phantomMin + ThreadLocalRandom.current().nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
         }
         return original;

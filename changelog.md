@@ -1,3 +1,11 @@
+Version 0.2.1
+------------------------------------------------------
+ - Updated to Yarn build 63, FAPI 0.42.1 & loader 0.12.5
+ - Moved subcommands into entity & world
+ - Changed every message to be a TranslatableText allowing for translations
+ - Added issues link
+
+------------------------------------------------------
 Version 0.2.0
 ------------------------------------------------------
  - Implemented per world config saving thanks to macbrayne

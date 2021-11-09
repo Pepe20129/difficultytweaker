@@ -26,6 +26,9 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	/*
 	// Make a collection of all api modules we wish to use
 	Set<String> apiModules = [
 			"fabric-api-base",
@@ -37,8 +40,10 @@ dependencies {
 	apiModules.forEach {
 		include(modImplementation(fabricApi.module(it, project.fabric_version)))
 	}
+	*/
 
 	implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+	include 'com.moandjiezana.toml:toml4j:0.7.2'
 }
 
 processResources {

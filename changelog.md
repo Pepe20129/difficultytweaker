@@ -1,3 +1,10 @@
+Version 0.2.2
+------------------------------------------------------
+ - Now depends on FAPI
+ - Fixed translations not working
+ - Fixed crash when no other mod using toml is present
+
+------------------------------------------------------
 Version 0.2.1
 ------------------------------------------------------
  - Updated to Yarn build 63, FAPI 0.42.1 & loader 0.12.5

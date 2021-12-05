@@ -1233,6 +1233,6 @@ public class FabricCommonCommandRegistration {
     }
 
     private static void sendText(CommandContext<ServerCommandSource> context, TranslatableText text) throws CommandSyntaxException {
-        context.getSource().getServer().getPlayerManager().broadcastChatMessage(text, MessageType.CHAT, context.getSource().getPlayer().getUuid());
+        context.getSource().sendFeedback(text, true/*context.getSource().getPlayer().getUuid()*/);
     }
 }

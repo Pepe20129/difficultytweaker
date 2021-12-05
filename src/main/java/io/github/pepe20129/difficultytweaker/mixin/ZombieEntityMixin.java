@@ -23,7 +23,7 @@ public class ZombieEntityMixin extends HostileEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "initEquipment(Lnet/minecraft/world/LocalDifficulty;)V", cancellable = true)
-    protected void initEquipment(LocalDifficulty difficulty, CallbackInfo info) {
+    private void initEquipment(LocalDifficulty difficulty, CallbackInfo info) {
         super.initEquipment(difficulty);
         float v;
         if (this.world.getDifficulty() == Difficulty.HARD) {

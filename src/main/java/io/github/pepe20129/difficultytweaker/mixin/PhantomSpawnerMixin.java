@@ -29,11 +29,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
-
     /*
     //TODO: Fix, didn't match the target
-    @ModifyVariable(at = @At(value = "STORE"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 3)
-    int modifyPhantomSpawns(int original) {
+    @ModifyVariable(at = @At(value = "STORE", ordinal = 3), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I")
+    private int modifyPhantomSpawns(int original) {
         if (Reference.getConfig().phantomActive) {
             if (Reference.getConfig().phantomMin >= Reference.getConfig().phantomMax)
                 return Reference.getConfig().phantomMax;

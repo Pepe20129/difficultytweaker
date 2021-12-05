@@ -41,7 +41,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
     @Shadow @Final private MeleeAttackGoal meleeAttackGoal;
     @Shadow @Final private BowAttackGoal<AbstractSkeletonEntity> bowAttackGoal;
     @Inject(at = @At("HEAD"), method = "updateAttackType()V", cancellable = true)
-    public void updateAttackType(CallbackInfo ci) {
+    private void updateAttackType(CallbackInfo ci) {
         if (this.world == null || this.world.isClient) {
             return;
         }
@@ -71,7 +71,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         throw new AssertionError();
     }
     @Inject(at = @At("HEAD"), method = "attack(Lnet/minecraft/entity/LivingEntity;F)V", cancellable = true)
-    public void attack(LivingEntity target, float pullProgress, CallbackInfo ci) {
+    private void attack(LivingEntity target, float pullProgress, CallbackInfo ci) {
         ItemStack lv = getArrowType(getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
         PersistentProjectileEntity lv2 = createArrowProjectile(lv, pullProgress);
 

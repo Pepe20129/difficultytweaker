@@ -40,7 +40,7 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
     }
     @Inject(at = @At("HEAD"), method = "scheduledTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
-        world.getBlockTickScheduler().schedule(pos, this, getFireTickDelay(world.random));
+        world.createAndScheduleBlockTick(pos, this, getFireTickDelay(world.random));
         if (!world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK)) {
             return;
         }
@@ -52,7 +52,7 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
         BlockState lv = world.getBlockState(pos.down());
         boolean bl = lv.isIn(world.getDimension().getInfiniburnBlocks());
 
-        int i = (Integer) state.get(FireBlock.AGE);
+        int i = (Integer)state.get(FireBlock.AGE);
         if (!bl && world.isRaining() && isRainingAround((World)world, pos) && random.nextFloat() < 0.2F + i * 0.03F) {
             world.removeBlock(pos, false);
 

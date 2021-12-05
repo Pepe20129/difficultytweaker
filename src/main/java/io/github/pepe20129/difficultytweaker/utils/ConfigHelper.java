@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 class ConfigHelper {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -38,8 +39,8 @@ class ConfigHelper {
         }
 
         // Integrated Server
-        File rootSavePath = ((MinecraftServerAccessor)server).getSession().getWorldDirectory(World.OVERWORLD);
-        File configPath = new File(rootSavePath, "config");
+        Path rootSavePath = ((MinecraftServerAccessor)server).getSession().getWorldDirectory(World.OVERWORLD);
+        File configPath = new File(String.valueOf(rootSavePath), "config");
 
         if(!configPath.mkdirs()) {
             LOGGER.debug("Failed to create " + configPath + ". Does this directory already exist?");

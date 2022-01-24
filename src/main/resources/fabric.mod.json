@@ -3,7 +3,7 @@
   "id": "difficultytweaker",
   "version": "${version}",
   "name": "Difficulty Tweaker",
-  "description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change local/regional difficulty; clamped local/regional difficulty; the damage scaling; the effect lengths of cave spiders' poison, bees' poison and wither skulls' wither; the distance hostile mobs are willing to fall; the probability of zombies to spawn with a weapon; the chance for a zombified piglin to spawn from a nether portal; raid wave amounts; the accuracy & cooldown of skeletons; the extra damage of arrows; the spread of fire; the damage dealt by guardians' beam; and the amount of phantoms that spawn in groups.\nSpecial thanks to:\nLlamaLad7#7444 for lots, §llots§r, §n§llots§r of help on the Fabric Discord server, since apparently my stupidity reaches it's peak when I'm coding.\nmacbrayne on GitHub for single handedly carrying me through the config system.\nEveryone who has helped me with the mod or modding in general.",
+  "description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
   "authors": [
     "Pepe20129/Pablo#1981"
   ],
@@ -26,7 +26,7 @@
   "depends": {
     "java": ">=17",
     "minecraft": "1.18.x",
-    "fabricloader": ">=0.12.0",
-    "fabric": ">=0.42"
+    "fabricloader": ">=0.12.10",
+    "fabric": ">=0.42.0"
   }
 }

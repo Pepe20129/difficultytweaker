@@ -1,3 +1,18 @@
+Version 0.2.4
+------------------------------------------------------
+- Turned the janky injects that were basically overwrites into actual overwrites
+- Added a zombie villager chance mixin
+- Changed the config format from TOML to JSON
+- Updated to 1.18.1
+- Moved special thanks from the mod description to the readme
+- Updated to FAPI 0.46.2 & loader 0.12.12
+
+------------------------------------------------------
+Version 0.2.3
+------------------------------------------------------
+- Updated to 1.18.
+
+------------------------------------------------------
 Version 0.2.2
 ------------------------------------------------------
  - Now depends on FAPI

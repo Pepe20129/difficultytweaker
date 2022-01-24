@@ -24,7 +24,9 @@
   "difficultytweaker.entity.witherskull": "\nThis command allows you to change length of wither skulls' wither effect.",
   "difficultytweaker.entity.witherskull.length": "\nSets the effect's length.\nDefault value: §l[40]§r\nCurrent value: %s",
   "difficultytweaker.entity.zombie": "\nThis command allows you to change probability of zombies spawning with weapons.",
-  "difficultytweaker.entity.zombie.chance": "\nSets the effect's length.\nDefault value: §l[0.1]§r\nCurrent value: %s",
+  "difficultytweaker.entity.zombie.chance": "\nSets the chance.\nDefault value: §l[0.1]§r\nCurrent value: %s",
+  "difficultytweaker.entity.zombievillager": "\nThis command allows you to change probability of villager turning into zombies",
+  "difficultytweaker.entity.zombievillager.chance": "\nSets the chance.\nDefault value: §l[1.0]§r\nCurrent value: %s",
 
   "difficultytweaker.world": "\nEverything related to the world.",
   "difficultytweaker.world.clampedlocaldifficulty": "\nThis command allows you to change the parameters of the clamped local difficulty mixin.",

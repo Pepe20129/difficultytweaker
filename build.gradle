@@ -4,13 +4,7 @@ plugins {
 }
 
 repositories {
-	maven {
-		url = 'https://jitpack.io'
-	}
-	maven {
-		name = "Ladysnake Mods"
-		url = 'https://ladysnake.jfrog.io/artifactory/mods'
-	}
+
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -27,23 +21,6 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	/*
-	// Make a collection of all api modules we wish to use
-	Set<String> apiModules = [
-			"fabric-api-base",
-			"fabric-command-api-v1", // Needed for the command API
-			"fabric-lifecycle-events-v1" // Needed for the server started and reload command events
-	]
-
-	// Add each module as a dependency
-	apiModules.forEach {
-		include(modImplementation(fabricApi.module(it, project.fabric_version)))
-	}
-	*/
-
-	implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-	include 'com.moandjiezana.toml:toml4j:0.7.2'
 }
 
 processResources {
@@ -55,12 +32,6 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
-	it.options.encoding = "UTF-8"
-
 	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = 17
 }

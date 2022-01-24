@@ -10,9 +10,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
@@ -21,6 +23,16 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
     public FireBlockMixin(Settings settings, float damage) {
         super(settings, damage);
     }
+
+    /*
+    //TODO: Find a way to get i & p
+    @ModifyVariable(at = @At("STORE"), method = "scheduledTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", ordinal = 9)
+    private int modifyFireEncouragement(int original, CallbackInfo info) {
+        if (Reference.getConfig().fireActive)
+            return (p + Reference.getConfig().fireEncouragement) / (i + 30);
+        return original;
+    }
+    */
 
     @Shadow private boolean areBlocksAroundFlammable(BlockView world, BlockPos pos) {
         throw new AssertionError();
@@ -38,16 +50,17 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
     @Shadow private BlockState getStateWithAge(WorldAccess arg, BlockPos arg2, int i) {
         throw new AssertionError();
     }
-    @Inject(at = @At("HEAD"), method = "scheduledTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         world.createAndScheduleBlockTick(pos, this, getFireTickDelay(world.random));
-        if (!world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK)) {
+        if (!world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK))
             return;
-        }
 
-        if (!state.canPlaceAt((WorldView)world, pos)) {
+        if (!state.canPlaceAt((WorldView)world, pos))
             world.removeBlock(pos, false);
-        }
 
         BlockState lv = world.getBlockState(pos.down());
         boolean bl = lv.isIn(world.getDimension().getInfiniburnBlocks());
@@ -55,9 +68,9 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
         int i = (Integer)state.get(FireBlock.AGE);
         if (!bl && world.isRaining() && isRainingAround((World)world, pos) && random.nextFloat() < 0.2F + i * 0.03F) {
             world.removeBlock(pos, false);
-
             return;
         }
+
         int j = Math.min(15, i + random.nextInt(3) / 2);
         if (i != j) {
             state = (BlockState)state.with(FireBlock.AGE, Integer.valueOf(j));
@@ -105,8 +118,8 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
                         int p = getBurnChance((WorldView)world, (BlockPos)lv3);
                         if (p > 0) {
                             int q = 0;
-                            if (Reference.getConfig().fireActive) {
-                                q = (p + Reference.getConfig().fireEncouragement) / (i + 30);
+                            if (Reference.getConfig().fire.active) {
+                                q = (p + Reference.getConfig().fire.encouragement) / (i + 30);
                             } else {
                                 q = (p + 40 + world.getDifficulty().getId() * 7) / (i + 30);
                             }
@@ -123,6 +136,5 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
                 }
             }
         }
-        return;
     }
 }

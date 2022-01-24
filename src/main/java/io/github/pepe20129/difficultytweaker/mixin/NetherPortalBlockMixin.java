@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,25 +24,26 @@ public class NetherPortalBlockMixin extends Block {
         super(settings);
     }
 
-    @Inject(at = @At("HEAD"), method = "randomTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", cancellable = true)
-    private void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         int v;
-        if (Reference.getConfig().netherPortalActive) {
-            v = Reference.getConfig().netherPortalProb;
-        } else {
+        if (Reference.getConfig().netherPortal.active)
+            v = Reference.getConfig().netherPortal.probability;
+        else
             v = world.getDifficulty().getId();
-        }
+
         if (world.getDimension().isNatural() && world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && random.nextInt(2000) < v) {
             while (world.getBlockState(pos).isOf(this)) {
                 pos = pos.down();
             }
             if (world.getBlockState(pos).allowsSpawning((BlockView)world, pos, EntityType.ZOMBIFIED_PIGLIN)) {
                 Entity lv = EntityType.ZOMBIFIED_PIGLIN.spawn(world, null, null, null, pos.up(), SpawnReason.STRUCTURE, false, false);
-                if (lv != null) {
+                if (lv != null)
                     lv.resetNetherPortalCooldown();
-                }
             }
         }
-        return;
     }
 }

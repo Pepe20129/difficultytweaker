@@ -19,14 +19,14 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     @Inject(at = @At("TAIL"), method = "getSafeFallDistance()I", cancellable = true)
     private void getSafeFallDistance(CallbackInfoReturnable<Integer> info) {
-        if (Reference.getConfig().mobActive) {
-            int i = (int)(getHealth() - getMaxHealth() * Reference.getConfig().mobFall);
+        if (Reference.getConfig().mob.active) {
+            int i = (int)(getHealth() - getMaxHealth() * Reference.getConfig().mob.fall);
             info.setReturnValue(i + 3);
         }
     }
 
     @ModifyVariable(at = @At("STORE"), method = "initEquipment(Lnet/minecraft/world/LocalDifficulty;)V", ordinal = 0)
     private float modifyArmorChance(float original) {
-        return Reference.getConfig().mobActive ? Reference.getConfig().mobArmorProb : original;
+        return Reference.getConfig().mob.active ? Reference.getConfig().mob.armorProbability : original;
     }
 }

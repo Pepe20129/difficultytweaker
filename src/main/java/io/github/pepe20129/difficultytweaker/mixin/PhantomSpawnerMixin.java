@@ -18,20 +18,19 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.*;
 import net.minecraft.world.gen.PhantomSpawner;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
     /*
     //TODO: Fix, didn't match the target
-    @ModifyVariable(at = @At(value = "STORE", ordinal = 3), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I")
+    @ModifyVariable(at = @At(value = "STORE", ordinal = 5), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 0)
     private int modifyPhantomSpawns(int original) {
         if (Reference.getConfig().phantomActive) {
             if (Reference.getConfig().phantomMin >= Reference.getConfig().phantomMax)
@@ -43,19 +42,22 @@ public class PhantomSpawnerMixin {
     */
 
     @Shadow private int ticksUntilNextSpawn;
-    @Inject(at = @At("HEAD"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", cancellable = true)
-    public void spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfoReturnable<Integer> info) {
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+    public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
         if (!spawnMonsters)
-            info.setReturnValue(0);
+            return 0;
         if (!world.getGameRules().getBoolean(GameRules.DO_INSOMNIA))
-            info.setReturnValue(0);
+            return 0;
         Random random = world.random;
         this.ticksUntilNextSpawn--;
         if (this.ticksUntilNextSpawn > 0)
-            info.setReturnValue(0);
+            return 0;
         this.ticksUntilNextSpawn += (60 + random.nextInt(60)) * 20;
         if (world.getAmbientDarkness() < 5 && world.getDimension().hasSkyLight())
-            info.setReturnValue(0);
+            return 0;
         int i = 0;
         for (PlayerEntity lv : world.getPlayers()) {
             if (lv.isSpectator())
@@ -78,8 +80,8 @@ public class PhantomSpawnerMixin {
                 continue;
             EntityData lv8 = null;
             int l;
-            if (Reference.getConfig().phantomActive) {
-                l = Reference.getConfig().phantomMin + random.nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
+            if (Reference.getConfig().phantom.active) {
+                l = Reference.getConfig().phantom.min + random.nextInt(Reference.getConfig().phantom.max - Reference.getConfig().phantom.min);
             } else {
                 l = 1 + random.nextInt(lv3.getGlobalDifficulty().getId() + 1);
             }
@@ -91,6 +93,6 @@ public class PhantomSpawnerMixin {
             }
             i += l;
         }
-        info.setReturnValue(i);
+        return i;
     }
 }

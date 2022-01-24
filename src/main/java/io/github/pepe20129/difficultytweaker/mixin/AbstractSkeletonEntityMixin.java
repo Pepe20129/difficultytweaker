@@ -18,9 +18,11 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractSkeletonEntity.class)
@@ -29,62 +31,51 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity implemen
         super(entityType, world);
     }
 
-    /*
+    @ModifyVariable(at = @At("LOAD"), method = "updateAttackType()V", ordinal = -1)
+    private int modifySkeletonCooldown(int original) {
+        return Reference.getConfig().skeleton.active ? Reference.getConfig().skeleton.cooldown : original;
+    }
+
     @ModifyVariable(at = @At("LOAD"), method = "updateAttackType()V", ordinal = 0)
-    int modifySkeletonCooldown(int original) {
-        if(Reference.getConfig().skeletonActive)
-            return Reference.getConfig().skeletonCooldown;
-        return original;
+    private int modifySkeletonCooldownNotHard(int original) {
+        return Reference.getConfig().skeleton.active ? Reference.getConfig().skeleton.cooldown : original;
+    }
+
+    /*
+    TODO: Fix the Inject and find a way to get persistentProjectileEntity
+    @Inject(at = @At(value = "INVOKE", ordinal = 11, target = "attack(Lnet/minecraft/entity/LivingEntity;F)V", shift = @At.Shift("AFTER")), method = "attack(Lnet/minecraft/entity/LivingEntity;F)V", cancellable = true)
+    private void modifyDivergence(LivingEntity target, float pullProgress, CallbackInfo ci) {
+        if (Reference.getConfig().skeletonActive) {
+            double d = target.getX() - getX();
+            double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
+            double g = target.getZ() - getZ();
+            double h = Math.sqrt(d * d + g * g);
+            persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, Reference.getConfig().skeletonDivergence);
+        }
     }
     */
-
-    @Shadow @Final private MeleeAttackGoal meleeAttackGoal;
-    @Shadow @Final private BowAttackGoal<AbstractSkeletonEntity> bowAttackGoal;
-    @Inject(at = @At("HEAD"), method = "updateAttackType()V", cancellable = true)
-    private void updateAttackType(CallbackInfo ci) {
-        if (this.world == null || this.world.isClient) {
-            return;
-        }
-
-        this.goalSelector.remove((Goal)this.meleeAttackGoal);
-        this.goalSelector.remove((Goal)this.bowAttackGoal);
-
-        ItemStack lv = getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
-        if (lv.getItem() == Items.BOW) {
-
-            int i = 20;
-            if (this.world.getDifficulty() != Difficulty.HARD) {
-                i = 40;
-            }
-            if (Reference.getConfig().skeletonActive) {
-                i = Reference.getConfig().skeletonCooldown; //This seems to not work? Maybe not??
-            }
-            this.bowAttackGoal.setAttackInterval(i);
-            this.goalSelector.add(4, (Goal)this.bowAttackGoal);
-        } else {
-            this.goalSelector.add(4, (Goal)this.meleeAttackGoal);
-        }
-        return;
-    }
 
     @Shadow protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
         throw new AssertionError();
     }
-    @Inject(at = @At("HEAD"), method = "attack(Lnet/minecraft/entity/LivingEntity;F)V", cancellable = true)
-    private void attack(LivingEntity target, float pullProgress, CallbackInfo ci) {
-        ItemStack lv = getArrowType(getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity lv2 = createArrowProjectile(lv, pullProgress);
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+    public void attack(LivingEntity target, float pullProgress) {
+        ItemStack itemStack = getArrowType(getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
+        PersistentProjectileEntity persistentProjectileEntity = createArrowProjectile(itemStack, pullProgress);
 
         double d = target.getX() - getX();
-        double e = target.getBodyY(0.3333333333333333D) - lv2.getY();
+        double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - getZ();
         double h = Math.sqrt(d * d + g * g);
-        if (Reference.getConfig().skeletonActive) {
-            lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, Reference.getConfig().skeletonDivergence); //This seems to not work?
+        if (Reference.getConfig().skeleton.active) {
+            persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, Reference.getConfig().skeleton.divergence);
         } else {
-            lv2.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (14 - this.world.getDifficulty().getId() * 4));
+            persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (14 - this.world.getDifficulty().getId() * 4));
         }
         playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRandom().nextFloat() * 0.4F + 0.8F));
-        return;
+        ((AbstractSkeletonEntity)(Object)this).world.spawnEntity(persistentProjectileEntity);
     }
 }

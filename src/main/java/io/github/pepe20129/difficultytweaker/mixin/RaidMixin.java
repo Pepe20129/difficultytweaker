@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class RaidMixin {
     @Inject(at = @At("RETURN"), method = "getMaxWaves(Lnet/minecraft/world/Difficulty;)I", cancellable = true)
     private void getMaxWaves(Difficulty difficulty, CallbackInfoReturnable<Integer> info) {
-        if (Reference.getConfig().raidActive)
-            info.setReturnValue(Reference.getConfig().raidCount);
+        if (Reference.getConfig().raid.active)
+            info.setReturnValue(Reference.getConfig().raid.count);
     }
 }

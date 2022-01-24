@@ -5,11 +5,9 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.pepe20129.difficultytweaker.Reference;
-import net.minecraft.network.MessageType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.TranslatableText;
@@ -42,7 +40,7 @@ public class FabricCommonCommandRegistration {
                     return 1;
                 }).build();
 
-        //region LocalDifficulty
+        //region Local Difficulty
         LiteralCommandNode<ServerCommandSource> localDifficultyNode = CommandManager
                 .literal("localDifficulty")
                 .executes(context -> {
@@ -55,12 +53,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> ldActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().localDifficulty.ldActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().localDifficulty.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -69,13 +62,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().localDifficulty.ldActive = a;
+                    Reference.getConfig().localDifficulty.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "local difficulty"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "local difficulty"));
-                    }
+                    sendActiveStatus(context, a, "local difficulty");
                     return 1;
                 }).build();
         //endregion
@@ -84,7 +73,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> ldStartNode = CommandManager
                 .literal("start")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().localDifficulty.ldStart + "]§r";
+                    String a = "§l[" + Reference.getConfig().localDifficulty.start + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.localdifficulty.start", a));
                     return 1;
                 }).build();
@@ -93,7 +82,7 @@ public class FabricCommonCommandRegistration {
                 .argument("start", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "start");
-                    Reference.getConfig().localDifficulty.ldStart = a;
+                    Reference.getConfig().localDifficulty.start = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -104,7 +93,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> ldDayTimeClampMaxNode = CommandManager
                 .literal("dayTimeClampMax")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().localDifficulty.ldDayTimeClampMax + "]§r";
+                    String a = "§l[" + Reference.getConfig().localDifficulty.dayTimeClampMax + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.localdifficulty.daytimeclampmax", a));
                     return 1;
                 }).build();
@@ -113,7 +102,7 @@ public class FabricCommonCommandRegistration {
                 .argument("dtcm", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "dtcm");
-                    Reference.getConfig().localDifficulty.ldDayTimeClampMax = a;
+                    Reference.getConfig().localDifficulty.dayTimeClampMax = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -124,7 +113,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> ldChunkClampMaxNode = CommandManager
                 .literal("chunkClampMax")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().localDifficulty.ldChunkClampMax + "]§r";
+                    String a = "§l[" + Reference.getConfig().localDifficulty.chunkClampMax + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.localdifficulty.chunkclampmax", a));
                     return 1;
                 }).build();
@@ -133,7 +122,7 @@ public class FabricCommonCommandRegistration {
                 .argument("ccm", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "ccm");
-                    Reference.getConfig().localDifficulty.ldChunkClampMax = a;
+                    Reference.getConfig().localDifficulty.chunkClampMax = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -144,7 +133,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> ldMoonNode = CommandManager
                 .literal("moon")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().localDifficulty.ldMoon + "]§r";
+                    String a = "§l[" + Reference.getConfig().localDifficulty.moon + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.localdifficulty.moon", a));
                     return 1;
                 }).build();
@@ -153,7 +142,7 @@ public class FabricCommonCommandRegistration {
                 .argument("moon", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "moon");
-                    Reference.getConfig().localDifficulty.ldMoon = a;
+                    Reference.getConfig().localDifficulty.moon = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -174,12 +163,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> beeActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().beeActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().bee.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -188,13 +172,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().beeActive = a;
+                    Reference.getConfig().bee.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "bee"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "bee"));
-                    }
+                    sendActiveStatus(context, a, "bee");
                     return 1;
                 }).build();
         //endregion
@@ -203,7 +183,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> beeLengthNode = CommandManager
                 .literal("length")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().beeLength + "]§r";
+                    String a = "§l[" + Reference.getConfig().bee.length + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.bee.length", a));
                     return 1;
                 }).build();
@@ -212,7 +192,7 @@ public class FabricCommonCommandRegistration {
                 .argument("length", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "length");
-                    Reference.getConfig().beeLength = a;
+                    Reference.getConfig().bee.length = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -233,12 +213,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> caveSpiderActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().caveSpiderActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().caveSpider.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -247,13 +222,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().caveSpiderActive = a;
+                    Reference.getConfig().caveSpider.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated","cave spider"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "cave spider"));
-                    }
+                    sendActiveStatus(context, a, "cave spider");
                     return 1;
                 }).build();
         //endregion
@@ -262,7 +233,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> caveSpiderLengthNode = CommandManager
                 .literal("length")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().caveSpiderLength + "]§r";
+                    String a = "§l[" + Reference.getConfig().caveSpider.length + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.cavespider.length", a));
                     return 1;
                 }).build();
@@ -271,7 +242,7 @@ public class FabricCommonCommandRegistration {
                 .argument("length", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "length");
-                    Reference.getConfig().caveSpiderLength = a;
+                    Reference.getConfig().caveSpider.length = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -292,12 +263,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> skeletonActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().skeletonActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().skeleton.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -306,13 +272,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().skeletonActive = a;
+                    Reference.getConfig().skeleton.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "skeleton"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "skeleton"));
-                    }
+                    sendActiveStatus(context, a, "skeleton");
                     return 1;
                 }).build();
         //endregion
@@ -321,7 +283,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> skeletonDivergenceNode = CommandManager
                 .literal("divergence")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().skeletonDivergence + "]§r";
+                    String a = "§l[" + Reference.getConfig().skeleton.divergence + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.skeleton.divergence", a));
                     return 1;
                 }).build();
@@ -330,7 +292,7 @@ public class FabricCommonCommandRegistration {
                 .argument("divergence", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "divergence");
-                    Reference.getConfig().skeletonDivergence = a;
+                    Reference.getConfig().skeleton.divergence = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -341,7 +303,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> skeletonCooldownNode = CommandManager
                 .literal("cooldown")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().skeletonCooldown + "]§r";
+                    String a = "§l[" + Reference.getConfig().skeleton.cooldown + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.skeleton.cooldown", a));
                     return 1;
                 }).build();
@@ -350,7 +312,7 @@ public class FabricCommonCommandRegistration {
                 .argument("cooldown", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "cooldown");
-                    Reference.getConfig().skeletonCooldown = a;
+                    Reference.getConfig().skeleton.cooldown = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -371,12 +333,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> fireActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().fireActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().fire.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -385,13 +342,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().fireActive = a;
+                    Reference.getConfig().fire.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "fire"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "fire"));
-                    }
+                    sendActiveStatus(context, a, "fire");
                     return 1;
                 }).build();
         //endregion
@@ -400,7 +353,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> fireEncouragementNode = CommandManager
                 .literal("encouragement")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().fireEncouragement + "]§r";
+                    String a = "§l[" + Reference.getConfig().fire.encouragement + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.fire.encouragement", a));
                     return 1;
                 }).build();
@@ -409,7 +362,7 @@ public class FabricCommonCommandRegistration {
                 .argument("encouragement", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "encouragement");
-                    Reference.getConfig().fireEncouragement = a;
+                    Reference.getConfig().fire.encouragement = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -430,12 +383,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> netherPortalActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().netherPortalActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().netherPortal.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -444,13 +392,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().netherPortalActive = a;
+                    Reference.getConfig().netherPortal.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "nether portal"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "nether portal"));
-                    }
+                    sendActiveStatus(context, a, "nether portal");
                     return 1;
                 }).build();
         //endregion
@@ -459,7 +403,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> netherPortalProbNode = CommandManager
                 .literal("probability")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().netherPortalProb + "/2000]§r";
+                    String a = "§l[" + Reference.getConfig().netherPortal.probability + "/2000]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.netherportal.probability", a));
                     return 1;
                 }).build();
@@ -468,7 +412,7 @@ public class FabricCommonCommandRegistration {
                 .argument("probability", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "probability");
-                    Reference.getConfig().netherPortalProb = a;
+                    Reference.getConfig().netherPortal.probability = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a + "/2000"));
                     return 1;
@@ -489,12 +433,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> mobActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().mobActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().mob.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -503,13 +442,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().mobActive = a;
+                    Reference.getConfig().mob.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "mob armor"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "mob armor"));
-                    }
+                    sendActiveStatus(context, a, "mob armor");
                     return 1;
                 }).build();
         //endregion
@@ -518,7 +453,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> mobArmorValueNode = CommandManager
                 .literal("prob")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().mobArmorProb + "]§r";
+                    String a = "§l[" + Reference.getConfig().mob.armorProbability + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.mob.armorprobability", a));
                     return 1;
                 }).build();
@@ -527,7 +462,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().mobArmorProb = a;
+                    Reference.getConfig().mob.armorProbability = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -538,7 +473,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> mobFallNode = CommandManager
                 .literal("fall")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().mobFall + "]§r";
+                    String a = "§l[" + Reference.getConfig().mob.fall + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.mob.fall", a));
                     return 1;
                 }).build();
@@ -551,7 +486,7 @@ public class FabricCommonCommandRegistration {
                         a = 1;
                     if (a < 0)
                         a = 0;
-                    Reference.getConfig().mobFall = a;
+                    Reference.getConfig().mob.fall = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -572,12 +507,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> projectileActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().projectileActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().projectile.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -586,13 +516,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().projectileActive = a;
+                    Reference.getConfig().projectile.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "projectile"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "projectile"));
-                    }
+                    sendActiveStatus(context, a, "projectile");
                     return 1;
                 }).build();
         //endregion
@@ -601,7 +527,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> projectileValueNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().projectileBonus + "]§r";
+                    String a = "§l[" + Reference.getConfig().projectile.bonus + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.projectile.damage", a));
                     return 1;
                 }).build();
@@ -610,7 +536,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().projectileBonus = a;
+                    Reference.getConfig().projectile.bonus = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -631,12 +557,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> playerActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().playerActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().player.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -645,13 +566,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().playerActive = a;
+                    Reference.getConfig().player.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "player"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "player"));
-                    }
+                    sendActiveStatus(context, a, "player");
                     return 1;
                 }).build();
         //endregion
@@ -660,7 +577,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> playerMultiplierNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().playerMultiplier + "]§r";
+                    String a = "§l[" + Reference.getConfig().player.multiplier + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.player.multiplier", a));
                     return 1;
                 }).build();
@@ -669,7 +586,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().playerMultiplier = a;
+                    Reference.getConfig().player.multiplier = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -690,12 +607,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> raidActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().raidActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().raid.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -704,13 +616,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().raidActive = a;
+                    Reference.getConfig().raid.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "raid"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "raid"));
-                    }
+                    sendActiveStatus(context, a, "raid");
                     return 1;
                 }).build();
         //endregion
@@ -719,7 +627,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> raidCountNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().raidCount + "]§r";
+                    String a = "§l[" + Reference.getConfig().raid.count + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.raid.count", a));
                     return 1;
                 }).build();
@@ -730,7 +638,7 @@ public class FabricCommonCommandRegistration {
                     int a = getInteger(context, "value");
                     if (a > 15)
                         a = 15;
-                    Reference.getConfig().raidCount = a;
+                    Reference.getConfig().raid.count = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -751,12 +659,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> witherSkullActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().witherSkullActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().witherSkull.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -765,13 +668,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().witherSkullActive = a;
+                    Reference.getConfig().witherSkull.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "wither skull"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "wither skull"));
-                    }
+                    sendActiveStatus(context, a, "wither skull");
                     return 1;
                 }).build();
         //endregion
@@ -780,7 +679,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> witherSkullLengthNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().witherSkullLength + "]§r";
+                    String a = "§l[" + Reference.getConfig().witherSkull.length + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.witherskull.length", a));
                     return 1;
                 }).build();
@@ -789,7 +688,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    Reference.getConfig().witherSkullLength = a;
+                    Reference.getConfig().witherSkull.length = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -810,12 +709,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> zombieActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().zombieActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().zombie.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -824,13 +718,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().zombieActive = a;
+                    Reference.getConfig().zombie.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "zombie"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "zombie"));
-                    }
+                    sendActiveStatus(context, a, "zombie");
                     return 1;
                 }).build();
         //endregion
@@ -839,7 +729,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> zombieChanceNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().zombieWeaponChance + "]§r";
+                    String a = "§l[" + Reference.getConfig().zombie.weaponChance + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.zombie.chance", a));
                     return 1;
                 }).build();
@@ -848,7 +738,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    Reference.getConfig().zombieWeaponChance = a;
+                    Reference.getConfig().zombie.weaponChance = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -868,12 +758,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> guardianActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().guardianActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().guardian.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -882,13 +767,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().guardianActive = a;
+                    Reference.getConfig().guardian.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "guardian"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "guardian"));
-                    }
+                    sendActiveStatus(context, a, "guardian");
                     return 1;
                 }).build();
         //endregion
@@ -897,7 +778,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> guardianValueNode = CommandManager
                 .literal("value")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().guardianAmount + "]§r";
+                    String a = "§l[" + Reference.getConfig().guardian.amount + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.guardian.value", a));
                     return 1;
                 }).build();
@@ -906,7 +787,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().guardianAmount = a;
+                    Reference.getConfig().guardian.amount = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -926,12 +807,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> phantomActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().phantomActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().phantom.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -940,13 +816,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().phantomActive = a;
+                    Reference.getConfig().phantom.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "phantom"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "phantom"));
-                    }
+                    sendActiveStatus(context, a, "phantom");
                     return 1;
                 }).build();
         //endregion
@@ -955,7 +827,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> phantomMinNode = CommandManager
                 .literal("min")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().phantomMin + "]§r";
+                    String a = "§l[" + Reference.getConfig().phantom.min + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.phantom.min", a));
                     return 1;
                 }).build();
@@ -964,9 +836,9 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    if (a >= Reference.getConfig().phantomMax)
-                        a = Reference.getConfig().phantomMax - 1;
-                    Reference.getConfig().phantomMin = a;
+                    if (a >= Reference.getConfig().phantom.max)
+                        a = Reference.getConfig().phantom.max - 1;
+                    Reference.getConfig().phantom.min = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -977,7 +849,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> phantomMaxNode = CommandManager
                 .literal("max")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().phantomMax + "]§r";
+                    String a = "§l[" + Reference.getConfig().phantom.max + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.entity.phantom.max", a));
                     return 1;
                 }).build();
@@ -986,9 +858,9 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    if (a <= Reference.getConfig().phantomMin)
-                        a = Reference.getConfig().phantomMin + 1;
-                    Reference.getConfig().phantomMax = a;
+                    if (a <= Reference.getConfig().phantom.min)
+                        a = Reference.getConfig().phantom.min + 1;
+                    Reference.getConfig().phantom.max = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -996,7 +868,7 @@ public class FabricCommonCommandRegistration {
         //endregion
         //endregion
 
-        //region Clamped Regional Difficulty
+        //region Clamped Local Difficulty
         LiteralCommandNode<ServerCommandSource> clampedLocalDifficultyNode = CommandManager
                 .literal("clampedLocalDifficulty")
                 .executes(context -> {
@@ -1008,12 +880,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> cldActiveNode = CommandManager
                 .literal("active")
                 .executes(context -> {
-                    String a;
-                    if (Reference.getConfig().clampedRegionalDifficulty.cldActive) {
-                        a = "§a§l[true]§r";
-                    } else {
-                        a = "§c§l[false]§r";
-                    }
+                    String a = toDisplayableString(Reference.getConfig().clampedLocalDifficulty.active);
                     sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
                     return 1;
                 }).build();
@@ -1022,13 +889,9 @@ public class FabricCommonCommandRegistration {
                 .argument("active", BoolArgumentType.bool())
                 .executes(context -> {
                     boolean a = getBool(context, "active");
-                    Reference.getConfig().clampedRegionalDifficulty.cldActive = a;
+                    Reference.getConfig().clampedLocalDifficulty.active = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
-                    if (a) {
-                        sendText(context, new TranslatableText("difficultytweaker.activated", "clamped local difficulty"));
-                    } else {
-                        sendText(context, new TranslatableText("difficultytweaker.deactivated", "clamped local difficulty"));
-                    }
+                    sendActiveStatus(context, a, "clamped local difficulty");
                     return 1;
                 }).build();
         //endregion
@@ -1037,7 +900,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> cldMinClampLimNode = CommandManager
                 .literal("minClampLim")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim + "]§r";
+                    String a = "§l[" + Reference.getConfig().clampedLocalDifficulty.minClampLim + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.clampedlocaldifficulty.minclampedlim", a));
                     return 1;
                 }).build();
@@ -1046,7 +909,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim = a;
+                    Reference.getConfig().clampedLocalDifficulty.minClampLim = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -1057,7 +920,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> cldMaxClampLimNode = CommandManager
                 .literal("maxClampLim")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim + "]§r";
+                    String a = "§l[" + Reference.getConfig().clampedLocalDifficulty.maxClampLim + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.clampedlocaldifficulty.maxclampedlim", a));
                     return 1;
                 }).build();
@@ -1066,7 +929,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim = a;
+                    Reference.getConfig().clampedLocalDifficulty.maxClampLim = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -1077,7 +940,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> cldMinClampNode = CommandManager
                 .literal("minClamp")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMinClamp + "]§r";
+                    String a = "§l[" + Reference.getConfig().clampedLocalDifficulty.minClamp + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.clampedlocaldifficulty.minclamped", a));
                     return 1;
                 }).build();
@@ -1086,7 +949,7 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().clampedRegionalDifficulty.cldMinClamp = a;
+                    Reference.getConfig().clampedLocalDifficulty.minClamp = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -1097,7 +960,7 @@ public class FabricCommonCommandRegistration {
         LiteralCommandNode<ServerCommandSource> cldMaxClampNode = CommandManager
                 .literal("maxClamp")
                 .executes(context -> {
-                    String a = "§l[" + Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp + "]§r";
+                    String a = "§l[" + Reference.getConfig().clampedLocalDifficulty.maxClamp + "]§r";
                     sendText(context, new TranslatableText("difficultytweaker.world.clampedlocaldifficulty.maxclamped", a));
                     return 1;
                 }).build();
@@ -1106,7 +969,56 @@ public class FabricCommonCommandRegistration {
                 .argument("value", FloatArgumentType.floatArg())
                 .executes(context -> {
                     float a = getFloat(context, "value");
-                    Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp = a;
+                    Reference.getConfig().clampedLocalDifficulty.maxClamp = a;
+                    Reference.getConfig().saveConfig(context.getSource().getServer());
+                    sendText(context, new TranslatableText("difficultytweaker.feedback", a));
+                    return 1;
+                }).build();
+        //endregion
+        //endregion
+
+        //region Zombie Villager
+        LiteralCommandNode<ServerCommandSource> zombieVillagerNode = CommandManager
+                .literal("zombieVillager")
+                .executes(context -> {
+                    sendText(context, new TranslatableText("difficultytweaker.entity.zombieVillager"));
+                    return 1;
+                }).build();
+
+        //region Active
+        LiteralCommandNode<ServerCommandSource> zombieVillagerActiveNode = CommandManager
+                .literal("active")
+                .executes(context -> {
+                    String a = toDisplayableString(Reference.getConfig().zombieVillager.active);
+                    sendText(context, new TranslatableText("difficultytweaker.active", "§c§l[false]§r", a));
+                    return 1;
+                }).build();
+
+        ArgumentCommandNode<ServerCommandSource, Boolean> zombieVillagerActiveVNode = CommandManager
+                .argument("active", BoolArgumentType.bool())
+                .executes(context -> {
+                    boolean a = getBool(context, "active");
+                    Reference.getConfig().zombieVillager.active = a;
+                    Reference.getConfig().saveConfig(context.getSource().getServer());
+                    sendActiveStatus(context, a, "zombie villager");
+                    return 1;
+                }).build();
+        //endregion
+
+        //region Chance
+        LiteralCommandNode<ServerCommandSource> zombieVillagerChanceNode = CommandManager
+                .literal("chance")
+                .executes(context -> {
+                    String a = "§l[" + Reference.getConfig().zombieVillager.chance + "]§r";
+                    sendText(context, new TranslatableText("difficultytweaker.entity.zombievillager.chance", a));
+                    return 1;
+                }).build();
+
+        ArgumentCommandNode<ServerCommandSource, Float> zombieVillagerChanceVNode = CommandManager
+                .argument("value", FloatArgumentType.floatArg())
+                .executes(context -> {
+                    float a = getFloat(context, "value");
+                    Reference.getConfig().zombieVillager.chance = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
                     return 1;
@@ -1218,6 +1130,12 @@ public class FabricCommonCommandRegistration {
         phantomNode.addChild(phantomMaxNode);
         phantomMaxNode.addChild(phantomMaxVNode);
 
+        entityNode.addChild(zombieVillagerNode);
+        zombieVillagerNode.addChild(zombieVillagerActiveNode);
+        zombieVillagerActiveNode.addChild(zombieVillagerActiveVNode);
+        zombieVillagerNode.addChild(zombieVillagerChanceNode);
+        zombieVillagerChanceNode.addChild(zombieVillagerChanceVNode);
+
         worldNode.addChild(clampedLocalDifficultyNode);
         clampedLocalDifficultyNode.addChild(cldActiveNode);
         cldActiveNode.addChild(cldActiveVNode);
@@ -1232,7 +1150,15 @@ public class FabricCommonCommandRegistration {
         //endregion
     }
 
-    private static void sendText(CommandContext<ServerCommandSource> context, TranslatableText text) throws CommandSyntaxException {
-        context.getSource().sendFeedback(text, true/*context.getSource().getPlayer().getUuid()*/);
+    private static void sendActiveStatus(CommandContext<ServerCommandSource> context, boolean active, String name) {
+        sendText(context, new TranslatableText(active ? "difficultytweaker.activated" : "difficultytweaker.deactivated", name));
+    }
+
+    private static String toDisplayableString(boolean bool) {
+        return bool ? "§a§l[true]§r" : "§c§l[false]§r";
+    }
+
+    private static void sendText(CommandContext<ServerCommandSource> context, TranslatableText text) {
+        context.getSource().sendFeedback(text, true);
     }
 }

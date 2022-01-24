@@ -1,7 +1,7 @@
 package io.github.pepe20129.difficultytweaker.utils;
 
-import com.moandjiezana.toml.Toml;
-import com.moandjiezana.toml.TomlWriter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.pepe20129.difficultytweaker.Reference;
 import io.github.pepe20129.difficultytweaker.mixin.MinecraftServerAccessor;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,7 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 class ConfigHelper {
@@ -22,11 +24,16 @@ class ConfigHelper {
         File configFile = getConfigFile(server);
         try {
             if (configFile.exists()) {
-                config = new Toml().read(configFile).to(ModConfig.class);
+                Gson gson = new GsonBuilder().create();
+                LOGGER.debug(Files.readString(configFile.toPath()));
+                config = gson.fromJson(Files.readString(configFile.toPath()), ModConfig.class);
             } else {
                 config = new ModConfig();
             }
-            new TomlWriter().write(config, configFile);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            FileWriter fileWriter = new FileWriter(configFile);
+            fileWriter.write(gson.toJson(config));
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,7 +42,7 @@ class ConfigHelper {
 
     static File getConfigFile(MinecraftServer server) {
         if(server.isDedicated()) {
-            return new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.toml");
+            return new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.json");
         }
 
         // Integrated Server
@@ -45,6 +52,6 @@ class ConfigHelper {
         if(!configPath.mkdirs()) {
             LOGGER.debug("Failed to create " + configPath + ". Does this directory already exist?");
         }
-        return new File(configPath, "difficultytweaker.toml");
+        return new File(configPath, "difficultytweaker.json");
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,29 +15,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LocalDifficulty.class)
 public class LocalDifficultyMixin {
     @Shadow @Final private float localDifficulty;
-    @Shadow @Final private Difficulty globalDifficulty;
-    @Inject(at = @At("HEAD"), method = "setLocalDifficulty(Lnet/minecraft/world/Difficulty;JJF)F", cancellable = true)
-	private void setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> info) {
-        if (Reference.getConfig().localDifficulty.ldActive) {
-            float everything = Reference.getConfig().localDifficulty.ldStart;
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+	public float setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize) {
+        if (Reference.getConfig().localDifficulty.active) {
+            float everything = Reference.getConfig().localDifficulty.start;
 
             //1 day = 24k ticks
             //(timeOfDay-3days/60days clamped between 0 & 1.5) *.25
-            float dayTimeFactor = MathHelper.clamp(((float)timeOfDay + -72000.0F) / 1440000.0F, 0.0F, Reference.getConfig().localDifficulty.ldDayTimeClampMax) * 0.25F;
+            float dayTimeFactor = MathHelper.clamp(((float)timeOfDay + -72000.0F) / 1440000.0F, 0.0F, Reference.getConfig().localDifficulty.dayTimeClampMax) * 0.25F;
             everything += dayTimeFactor;
             float chunkAndMoonFactor = 0.0F;
 
             //Add between 0 & 1.5 depending on Inhabitation. max 150 days
-            chunkAndMoonFactor += MathHelper.clamp((float)inhabitedTime / 3600000.0F, 0.0F, Reference.getConfig().localDifficulty.ldChunkClampMax) * 1.25F;
+            chunkAndMoonFactor += MathHelper.clamp((float)inhabitedTime / 3600000.0F, 0.0F, Reference.getConfig().localDifficulty.chunkClampMax) * 1.25F;
 
             //Add between 0 & dayTimeFactor depending on moonSize
-            chunkAndMoonFactor += MathHelper.clamp(moonSize * Reference.getConfig().localDifficulty.ldMoon, 0.0F, dayTimeFactor);
+            chunkAndMoonFactor += MathHelper.clamp(moonSize * Reference.getConfig().localDifficulty.moon, 0.0F, dayTimeFactor);
             everything += chunkAndMoonFactor;
 
-            info.setReturnValue(3 * everything);
+            return 3 * everything;
         } else {
             if (difficulty == Difficulty.PEACEFUL) {
-                info.setReturnValue(0F);
+                return 0;
             }
 
             boolean isHard = (difficulty == Difficulty.HARD);
@@ -60,19 +63,22 @@ public class LocalDifficultyMixin {
             }
             everything += chunkAndMoonFactor;
 
-            info.setReturnValue(difficulty.getId() * everything);
+            return difficulty.getId() * everything;
         }
 	}
 
-    @Inject(at = @At("HEAD"), method = "getClampedLocalDifficulty()F", cancellable = true)
-    private void getClampedLocalDifficulty(CallbackInfoReturnable<Float> info) {
+    /**
+     * @author Pepe20129/Pablo#1981
+     */
+    @Overwrite
+    public float getClampedLocalDifficulty() {
         float v = (this.localDifficulty - 2F) / 2F;
-        if (Reference.getConfig().clampedRegionalDifficulty.cldActive) {
-            if (this.localDifficulty < Reference.getConfig().clampedRegionalDifficulty.cldMinClampLim) {
-                v = Reference.getConfig().clampedRegionalDifficulty.cldMinClamp;
+        if (Reference.getConfig().clampedLocalDifficulty.active) {
+            if (this.localDifficulty < Reference.getConfig().clampedLocalDifficulty.minClampLim) {
+                v = Reference.getConfig().clampedLocalDifficulty.minClamp;
             }
-            if (this.localDifficulty > Reference.getConfig().clampedRegionalDifficulty.cldMaxClampLim) {
-                v = Reference.getConfig().clampedRegionalDifficulty.cldMaxClamp;
+            if (this.localDifficulty > Reference.getConfig().clampedLocalDifficulty.maxClampLim) {
+                v = Reference.getConfig().clampedLocalDifficulty.maxClamp;
             }
         } else {
             if (this.localDifficulty < 2F) {
@@ -82,6 +88,6 @@ public class LocalDifficultyMixin {
                 v = 1F;
             }
         }
-        info.setReturnValue(v);
+        return v;
     }
 }

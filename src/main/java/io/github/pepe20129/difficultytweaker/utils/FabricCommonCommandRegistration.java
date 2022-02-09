@@ -836,8 +836,8 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    if (a >= Reference.getConfig().phantom.max)
-                        a = Reference.getConfig().phantom.max - 1;
+                    if (a > Reference.getConfig().phantom.max)
+                        a = Reference.getConfig().phantom.max;
                     Reference.getConfig().phantom.min = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));
@@ -858,8 +858,8 @@ public class FabricCommonCommandRegistration {
                 .argument("value", IntegerArgumentType.integer())
                 .executes(context -> {
                     int a = getInteger(context, "value");
-                    if (a <= Reference.getConfig().phantom.min)
-                        a = Reference.getConfig().phantom.min + 1;
+                    if (a < Reference.getConfig().phantom.min)
+                        a = Reference.getConfig().phantom.min;
                     Reference.getConfig().phantom.max = a;
                     Reference.getConfig().saveConfig(context.getSource().getServer());
                     sendText(context, new TranslatableText("difficultytweaker.feedback", a));

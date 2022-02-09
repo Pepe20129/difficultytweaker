@@ -1,98 +1,23 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
 import io.github.pepe20129.difficultytweaker.Reference;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.PhantomEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.ServerStatHandler;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.*;
 import net.minecraft.world.gen.PhantomSpawner;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
-    /*
-    //TODO: Fix, didn't match the target
-    @ModifyVariable(at = @At(value = "STORE", ordinal = 5), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 0)
+
+    @ModifyVariable(at = @At(value = "STORE"), method = "spawn(Lnet/minecraft/server/world/ServerWorld;ZZ)I", ordinal = 3)
     private int modifyPhantomSpawns(int original) {
-        if (Reference.getConfig().phantomActive) {
-            if (Reference.getConfig().phantomMin >= Reference.getConfig().phantomMax)
-                return Reference.getConfig().phantomMax;
-            return Reference.getConfig().phantomMin + ThreadLocalRandom.current().nextInt(Reference.getConfig().phantomMax - Reference.getConfig().phantomMin);
+        if (Reference.getConfig().phantom.active) {
+            if (Reference.getConfig().phantom.min >= Reference.getConfig().phantom.max)
+                return Reference.getConfig().phantom.max;
+            return Reference.getConfig().phantom.min + ThreadLocalRandom.current().nextInt(Reference.getConfig().phantom.max - Reference.getConfig().phantom.min);
         }
         return original;
-    }
-    */
-
-    @Shadow private int ticksUntilNextSpawn;
-    /**
-     * @author Pepe20129/Pablo#1981
-     */
-    @Overwrite
-    public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
-        if (!spawnMonsters)
-            return 0;
-        if (!world.getGameRules().getBoolean(GameRules.DO_INSOMNIA))
-            return 0;
-        Random random = world.random;
-        this.ticksUntilNextSpawn--;
-        if (this.ticksUntilNextSpawn > 0)
-            return 0;
-        this.ticksUntilNextSpawn += (60 + random.nextInt(60)) * 20;
-        if (world.getAmbientDarkness() < 5 && world.getDimension().hasSkyLight())
-            return 0;
-        int i = 0;
-        for (PlayerEntity lv : world.getPlayers()) {
-            if (lv.isSpectator())
-                continue;
-            BlockPos lv2 = lv.getBlockPos();
-            if (world.getDimension().hasSkyLight() && (lv2.getY() < world.getSeaLevel() || !world.isSkyVisible(lv2)))
-                continue;
-            LocalDifficulty lv3 = world.getLocalDifficulty(lv2);
-            if (!lv3.isHarderThan(random.nextFloat() * 3.0F))
-                continue;
-            ServerStatHandler lv4 = ((ServerPlayerEntity) lv).getStatHandler();
-            int j = MathHelper.clamp(lv4.getStat(Stats.CUSTOM.getOrCreateStat(Stats.TIME_SINCE_REST)), 1, 2147483647);
-            int k = 24000;
-            if (random.nextInt(j) < 72000)
-                continue;
-            BlockPos lv5 = lv2.up(20 + random.nextInt(15)).east(-10 + random.nextInt(21)).south(-10 + random.nextInt(21));
-            BlockState lv6 = world.getBlockState(lv5);
-            FluidState lv7 = world.getFluidState(lv5);
-            if (!SpawnHelper.isClearForSpawn((BlockView) world, lv5, lv6, lv7, EntityType.PHANTOM))
-                continue;
-            EntityData lv8 = null;
-            int l;
-            if (Reference.getConfig().phantom.active) {
-                l = Reference.getConfig().phantom.min + random.nextInt(Reference.getConfig().phantom.max - Reference.getConfig().phantom.min);
-            } else {
-                l = 1 + random.nextInt(lv3.getGlobalDifficulty().getId() + 1);
-            }
-            for (int m = 0; m < l; m++) {
-                PhantomEntity lv9 = (PhantomEntity) EntityType.PHANTOM.create((World) world);
-                lv9.refreshPositionAndAngles(lv5, 0.0F, 0.0F);
-                lv8 = lv9.initialize((ServerWorldAccess) world, lv3, SpawnReason.NATURAL, lv8, null);
-                world.spawnEntityAndPassengers((Entity) lv9);
-            }
-            i += l;
-        }
-        return i;
     }
 }

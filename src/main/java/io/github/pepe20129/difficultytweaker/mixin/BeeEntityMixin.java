@@ -1,6 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
-import io.github.pepe20129.difficultytweaker.Reference;
+import io.github.pepe20129.difficultytweaker.utils.ConfigHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(BeeEntity.class)
 public abstract class BeeEntityMixin extends AnimalEntity {
-    protected BeeEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected BeeEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @ModifyVariable(method = "tryAttack(Lnet/minecraft/entity/Entity;)Z", at = @At(value = "LOAD", ordinal = 0))
-    private int modifyPoisonDuration(int original) {
-        return Reference.getConfig().bee.active ?  Reference.getConfig().bee.length : original;
-    }
+	@ModifyVariable(method = "tryAttack(Lnet/minecraft/entity/Entity;)Z", at = @At(value = "LOAD", ordinal = 0))
+	private int modifyPoisonDuration(int original) {
+		return ConfigHelper.getConfig().bee.active ?  ConfigHelper.getConfig().bee.length : original;
+	}
 }

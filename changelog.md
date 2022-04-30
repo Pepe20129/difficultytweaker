@@ -1,3 +1,9 @@
+Version 0.2.6
+------------------------------------------------------
+- Removed a lot of `@Overwite`s
+- Added Quilt loader support
+
+------------------------------------------------------
 Version 0.2.5
 ------------------------------------------------------
 - Changed the `Phantom` mixin from an `@Overwrite` to a `@ModifyVariable` fixing a crash with architectury

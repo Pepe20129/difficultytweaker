@@ -1,32 +1,35 @@
 {
-  "schemaVersion": 1,
-  "id": "difficultytweaker",
-  "version": "${version}",
-  "name": "Difficulty Tweaker",
-  "description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
-  "authors": [
-    "Pepe20129/Pablo#1981"
-  ],
-  "contact": {
-    "homepage": "https://github.com/Pepe20129/difficultytweaker",
-    "issues": "https://github.com/Pepe20129/difficultytweaker/issues",
-    "sources": "https://github.com/Pepe20129/difficultytweaker"
-  },
-  "license": "LGPL-3.0-only",
-  "icon": "assets/difficultytweaker/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "io.github.pepe20129.difficultytweaker.DifficultyTweakerMod"
-    ]
-  },
-  "mixins": [
-    "difficultytweaker.mixins.json"
-  ],
-  "depends": {
-    "java": ">=17",
-    "minecraft": "1.18.x",
-    "fabricloader": ">=0.12.10",
-    "fabric": ">=0.42.0"
-  }
+	"schemaVersion": 1,
+	"id": "difficultytweaker",
+	"version": "${version}",
+	"name": "Difficulty Tweaker",
+	"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
+	"authors": [
+		"Pepe20129/Pablo#1981"
+	],
+	"contributors": [
+		"macbrayne"
+	],
+	"contact": {
+		"homepage": "https://github.com/Pepe20129/difficultytweaker",
+		"issues": "https://github.com/Pepe20129/difficultytweaker/issues",
+		"sources": "https://github.com/Pepe20129/difficultytweaker"
+	},
+	"license": "LGPL-3.0-only",
+	"icon": "assets/difficultytweaker/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.pepe20129.difficultytweaker.FabricDifficultyTweaker"
+		]
+	},
+	"mixins": [
+		"difficultytweaker.mixins.json"
+	],
+	"depends": {
+		"java": ">=17",
+		"minecraft": "1.18.x",
+		"fabricloader": ">=0.12.10",
+		"fabric": ">=0.42.0"
+	}
 }

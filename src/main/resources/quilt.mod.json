@@ -1,0 +1,49 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "io.github.pepe20129",
+		"id": "difficultytweaker",
+		"version": "${version}",
+		"entrypoints": {
+			"init": "io.github.pepe20129.difficultytweaker.QuiltDifficultyTweaker"
+		},
+		"depends": [
+			{
+				"id": "java",
+				"versions": ">=17"
+			},
+			{
+				"id": "minecraft",
+				"versions": "1.18.x"
+			},
+			{
+				"id": "fabricloader",
+				"versions": ">=0.12.10"
+			},
+			{
+				"id": "fabric",
+				"versions": ">=0.42.0"
+			}
+		],
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"metadata": {
+			"name": "Difficulty Tweaker",
+			"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
+			"contributors": {
+				"Pepe20129/Pablo#1981": "Author",
+				"macbrayne": "Contributor"
+			},
+			"contact": {
+				"homepage": "https://github.com/Pepe20129/difficultytweaker",
+				"issues": "https://github.com/Pepe20129/difficultytweaker/issues",
+				"sources": "https://github.com/Pepe20129/difficultytweaker"
+			},
+			"license": "LGPL-3.0-only",
+			"icon": "assets/difficultytweaker/icon.png"
+		}
+	},
+	"mixin": "difficultytweaker.mixins.json",
+	"minecraft": {
+		"environment": "*"
+	}
+}

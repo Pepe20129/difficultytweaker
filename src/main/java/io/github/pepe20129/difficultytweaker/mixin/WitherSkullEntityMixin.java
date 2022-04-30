@@ -1,6 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
-import io.github.pepe20129.difficultytweaker.Reference;
+import io.github.pepe20129.difficultytweaker.utils.ConfigHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.entity.projectile.WitherSkullEntity;
@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(WitherSkullEntity.class)
 public class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
-    protected WitherSkullEntityMixin(EntityType<? extends ExplosiveProjectileEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected WitherSkullEntityMixin(EntityType<? extends ExplosiveProjectileEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @ModifyVariable(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "LOAD", ordinal = 0))
-    private int modifyWitherDuration(int original) {
-        return Reference.getConfig().witherSkull.active ? Reference.getConfig().witherSkull.length : original;
-    }
+	@ModifyVariable(method = "onEntityHit(Lnet/minecraft/util/hit/EntityHitResult;)V", at = @At(value = "LOAD", ordinal = 0))
+	private int modifyWitherDuration(int original) {
+		return ConfigHelper.getConfig().witherSkull.active ? ConfigHelper.getConfig().witherSkull.length : original;
+	}
 }

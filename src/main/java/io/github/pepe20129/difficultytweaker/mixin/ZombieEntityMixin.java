@@ -1,94 +1,80 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
-import io.github.pepe20129.difficultytweaker.Reference;
+import io.github.pepe20129.difficultytweaker.utils.ConfigHelper;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.Random;
 
 @Mixin(ZombieEntity.class)
 public class ZombieEntityMixin extends HostileEntity {
-    protected ZombieEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected ZombieEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    /**
-     * @author Pepe20129/Pablo#1981
-     */
-    @Overwrite
-    public void initEquipment(LocalDifficulty difficulty) {
-        super.initEquipment(difficulty);
-        float v;
-        if (this.world.getDifficulty() == Difficulty.HARD) {
-            v = 0.05F;
-        } else {
-            v = 0.01F;
-        }
+	@Redirect(
+		method = "initEquipment(Lnet/minecraft/world/LocalDifficulty;)V",
+		at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F")
+	)
+	private float modifyInitEquipment(Random random) {
+		if (ConfigHelper.getConfig().zombie.active) {
+			return (random.nextFloat() < ConfigHelper.getConfig().zombie.weaponChance) ? 0 : 1;
+		} else {
+			return random.nextFloat();
+		}
+	}
 
-        if (Reference.getConfig().zombie.active) {
-            v = Reference.getConfig().zombie.weaponChance;
-        }
-        if (this.random.nextFloat() < v) {
-            int i = this.random.nextInt(3);
-            if (i == 0) {
-                equipStack(EquipmentSlot.MAINHAND, new ItemStack((ItemConvertible)Items.IRON_SWORD));
-            } else {
-                equipStack(EquipmentSlot.MAINHAND, new ItemStack((ItemConvertible)Items.IRON_SHOVEL));
-            }
-        }
-    }
+	@Redirect(
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",
+			ordinal = 0
+		)
+	)
+	private Difficulty firstGetDifficulty(ServerWorld world) {
+		return Difficulty.HARD;
+	}
 
-    /**
-     * @author Pepe20129/Pablo#1981
-     */
-    @Overwrite
-    public void onKilledOther(ServerWorld world, LivingEntity other) {
-        super.onKilledOther(world, other);
-        if ((Reference.getConfig().zombieVillager.active || (world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD)) && other instanceof VillagerEntity) {
-            if (Reference.getConfig().zombieVillager.active && this.random.nextFloat() >= Reference.getConfig().zombieVillager.chance) {
-                return;
-            } else {
-                if (world.getDifficulty() != Difficulty.HARD && this.random.nextBoolean())
-                    return;
-            }
+	@Redirect(
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",
+			ordinal = 1
+		)
+	)
+	private Difficulty secondGetDifficulty(ServerWorld world) {
+		boolean shouldSpawnZombieVillager;
+		if (ConfigHelper.getConfig().zombieVillager.active) {
+			shouldSpawnZombieVillager = random.nextFloat() < ConfigHelper.getConfig().zombieVillager.chance;
+		} else {
+			shouldSpawnZombieVillager = (world.getDifficulty() == Difficulty.NORMAL && random.nextBoolean()) || world.getDifficulty() == Difficulty.HARD;
+		}
 
-            VillagerEntity villagerEntity = (VillagerEntity)other;
-            ZombieVillagerEntity zombieVillagerEntity = (ZombieVillagerEntity)villagerEntity.convertTo(EntityType.ZOMBIE_VILLAGER, false);
-            zombieVillagerEntity.initialize(
-                    world,
-                    world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()),
-                    SpawnReason.CONVERSION,
-                    new ZombieEntity.ZombieData(false, true),
-                    (NbtCompound)null
-            );
-            zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
-            zombieVillagerEntity.setGossipData((NbtElement)villagerEntity.getGossip().serialize(NbtOps.INSTANCE).getValue());
-            zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
-            zombieVillagerEntity.setXp(villagerEntity.getExperience());
-            if (!this.isSilent()) {
-                world.syncWorldEvent((PlayerEntity)null, 1026, this.getBlockPos(), 0);
-            }
-        }
-    }
+		if (shouldSpawnZombieVillager) {
+			return Difficulty.HARD;
+		} else {
+			return Difficulty.PEACEFUL;
+		}
+	}
+
+	@Redirect(
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",
+			ordinal = 2
+		)
+	)
+	private Difficulty thirdGetDifficulty(ServerWorld world) {
+		return Difficulty.HARD;
+	}
 }

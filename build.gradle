@@ -1,14 +1,7 @@
 plugins {
 	id "fabric-loom" version "0.12-SNAPSHOT"
-	id "io.github.juuxel.loom-quiltflower" version "1.7.1"
+	id "io.github.juuxel.loom-quiltflower" version "1.7.2"
 	id "maven-publish"
-}
-
-repositories {
-	maven {
-		name = 'Quilt'
-		url = 'https://maven.quiltmc.org/repository/release'
-	}
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -18,12 +11,19 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+repositories {
+	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/release'
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	compileOnly "org.quiltmc:qsl:${project.qsl_version}"
 	compileOnly "org.quiltmc:quilt-loader:${project.quilt_loader_version}"
@@ -32,11 +32,7 @@ dependencies {
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-
-	filesMatching("quilt.mod.json") {
+	filesMatching(["fabric.mod.json", "quilt.mod.json"]) {
 		expand "version": project.version
 	}
 }
@@ -47,8 +43,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 }
 
@@ -56,6 +50,10 @@ jar {
 	from("LICENSE.txt") {
 		rename {"LICENSE_${project.archivesBaseName}.txt"}
 	}
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/difficultytweaker.accesswidener")
 }
 
 // configure the maven publication

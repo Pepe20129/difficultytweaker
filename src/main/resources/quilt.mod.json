@@ -43,6 +43,7 @@
 		}
 	},
 	"mixin": "difficultytweaker.mixins.json",
+	"accessWidener" : "difficultytweaker.accesswidener",
 	"minecraft": {
 		"environment": "*"
 	}

@@ -60,7 +60,7 @@ public class ConfigHelper {
 		setConfig(config);
 	}
 
-	static File getConfigFile(MinecraftServer server) {
+	private static File getConfigFile(MinecraftServer server) {
 		if (server.isDedicated()) {
 			return new File(FabricLoader.getInstance().getConfigDir().toFile(), "difficultytweaker.json");
 		}

@@ -26,6 +26,7 @@
 	"mixins": [
 		"difficultytweaker.mixins.json"
 	],
+	"accessWidener" : "difficultytweaker.accesswidener",
 	"depends": {
 		"java": ">=17",
 		"minecraft": "1.18.x",

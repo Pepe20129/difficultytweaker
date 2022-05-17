@@ -9,6 +9,8 @@
 		"CaveSpiderEntityMixin",
 		"FireBeamGoalMixin",
 		"FireBlockMixin",
+		"HungerManagerMixin",
+		"LightningEntityMixin",
 		"LocalDifficultyMixin",
 		"MobEntityMixin",
 		"NetherPortalBlockMixin",
@@ -17,13 +19,14 @@
 		"PlayerEntityMixin",
 		"RaidMemberMixin",
 		"RaidMixin",
+		"SpiderEntityMixin",
+		"WitherEntityMixin",
 		"WitherSkullEntityMixin",
 		"ZombieEntityMixin"
 	],
 	"client": [
 		"MinecraftServerAccessor"
 	],
-	"server": [],
 	"injectors": {
 		"defaultRequire": 1
 	}

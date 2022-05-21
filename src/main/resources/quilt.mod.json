@@ -14,11 +14,11 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "1.18.x"
+				"versions": "1.19-pre1"
 			},
 			{
-				"id": "fabricloader",
-				"versions": ">=0.12.10"
+				"id": "quilt-loader",
+				"versions": ">=0.16.0"
 			},
 			{
 				"id": "fabric",

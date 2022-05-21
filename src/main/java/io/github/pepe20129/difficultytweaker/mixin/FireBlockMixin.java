@@ -15,7 +15,7 @@ public abstract class FireBlockMixin extends AbstractFireBlock {
 	}
 
 	@Redirect(
-			method = "scheduledTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V",
+			method = "scheduledTick",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I")
 	)
 	private int getId(Difficulty difficulty) {

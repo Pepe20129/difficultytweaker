@@ -15,7 +15,7 @@ public class NetherPortalBlockMixin extends Block {
 	}
 
 	@Redirect(
-			method = "randomTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V",
+			method = "randomTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/AbstractRandom;)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I")
 	)
 	private int getId(Difficulty difficulty) {

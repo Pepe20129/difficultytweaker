@@ -8,13 +8,12 @@ import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.AbstractRandom;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import java.util.Random;
 
 @Mixin(ZombieEntity.class)
 public class ZombieEntityMixin extends HostileEntity {
@@ -23,16 +22,16 @@ public class ZombieEntityMixin extends HostileEntity {
 	}
 
 	@Redirect(
-		method = "initEquipment(Lnet/minecraft/world/LocalDifficulty;)V",
-		at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F")
+		method = "initEquipment(Lnet/minecraft/util/math/random/AbstractRandom;Lnet/minecraft/world/LocalDifficulty;)V",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/random/AbstractRandom;nextFloat()F")
 	)
-	private float modifyInitEquipment(Random random) {
+	private float modifyInitEquipment(AbstractRandom random) {
 		return ConfigHelper.getConfig().zombie.active ? ((random.nextFloat() < ConfigHelper.getConfig().zombie.weaponChance) ? 0f : 1f) : random.nextFloat();
 	}
 
 
 	@Redirect(
-		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)Z",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",
@@ -44,7 +43,7 @@ public class ZombieEntityMixin extends HostileEntity {
 	}
 
 	@Redirect(
-		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)Z",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",
@@ -63,7 +62,7 @@ public class ZombieEntityMixin extends HostileEntity {
 	}
 
 	@Redirect(
-		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)V",
+		method = "onKilledOther(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LivingEntity;)Z",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;",

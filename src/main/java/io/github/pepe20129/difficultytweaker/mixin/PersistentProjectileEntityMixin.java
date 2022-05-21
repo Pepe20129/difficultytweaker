@@ -1,7 +1,6 @@
 package io.github.pepe20129.difficultytweaker.mixin;
 
 import io.github.pepe20129.difficultytweaker.utils.ConfigHelper;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.world.Difficulty;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +21,9 @@ public abstract class PersistentProjectileEntityMixin {
 
 	@ModifyConstant(
 		method = "applyEnchantmentEffects(Lnet/minecraft/entity/LivingEntity;F)V",
-		constant = @Constant(floatValue = 0.11f)
+		constant = @Constant(doubleValue = 0.11d)
 	)
-	private static float modifyMultiplier(float original) {
+	private static double modifyMultiplier(double original) {
 		return ConfigHelper.getConfig().projectile.active ? ConfigHelper.getConfig().projectile.bonus : original;
 	}
 }

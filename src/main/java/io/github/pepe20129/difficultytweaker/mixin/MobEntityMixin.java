@@ -25,7 +25,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 		}
 	}
 
-	@ModifyVariable(at = @At("STORE"), method = "initEquipment(Lnet/minecraft/util/math/random/AbstractRandom;Lnet/minecraft/world/LocalDifficulty;)V", ordinal = 0)
+	@ModifyVariable(at = @At("STORE"), method = "initEquipment(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/world/LocalDifficulty;)V", ordinal = 0)
 	private float modifyArmorChance(float original) {
 		return ConfigHelper.getConfig().mob.active ? ConfigHelper.getConfig().mob.armorProbability : original;
 	}

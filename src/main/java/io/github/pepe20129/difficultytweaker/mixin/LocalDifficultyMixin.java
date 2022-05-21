@@ -15,6 +15,8 @@ public class LocalDifficultyMixin {
 	@Shadow @Final private float localDifficulty;
 	/**
 	 * @author Pepe20129/Pablo#1981
+	 *
+	 * @reason Made specific parameters configurable
 	 */
 	@Overwrite
 	private float setLocalDifficulty(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize) {
@@ -68,6 +70,8 @@ public class LocalDifficultyMixin {
 
 	/**
 	 * @author Pepe20129/Pablo#1981
+	 *
+	 * @reason Made specific parameters configurable
 	 */
 	@Overwrite
 	public float getClampedLocalDifficulty() {

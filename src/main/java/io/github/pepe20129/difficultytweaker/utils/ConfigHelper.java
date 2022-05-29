@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ConfigHelper {
-	private static final Logger LOGGER = LogManager.getLogger("difficulty_tweaker");
+	private static final Logger LOGGER = LogManager.getLogger("difficultytweaker");
 
 	private static Config config = new Config();
 
@@ -40,7 +40,7 @@ public class ConfigHelper {
 		}
 	}
 
-	static void reloadConfig(MinecraftServer server) {
+	public static void reloadConfig(MinecraftServer server) {
 		Config config = new Config();
 		File configFile = getConfigFile(server);
 		try {

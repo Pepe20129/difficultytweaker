@@ -29,15 +29,15 @@ import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
 import static com.mojang.brigadier.arguments.FloatArgumentType.getFloat;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 
-public class FabricCommonCommandRegistration {
-	public static final Logger LOGGER = LoggerFactory.getLogger("difficultytweaker");
+public class CommandRegistration {
+	private static final Logger LOGGER = LoggerFactory.getLogger("difficultytweaker");
+
+	private static final Config NEW_CONFIG = new Config();
 
 	//can't implement this in the annotations because java requires constant values in annotation initialization
-	public static final Map<String, Map<String, Function<Object, Object>>> specialValueModifiers = Map.of(
-		"phantom", Map.of(
-			"min", value -> (int)value > ConfigHelper.getConfig().phantom.max ? ConfigHelper.getConfig().phantom.max : value,
-			"max", value -> (int)value < ConfigHelper.getConfig().phantom.min ? ConfigHelper.getConfig().phantom.min : value
-		)
+	private static final Map<String, Function<Object, Object>> specialValueModifiers = Map.of(
+		"entity.phantom.min", value -> (int)value > ConfigHelper.getConfig().phantom.max ? ConfigHelper.getConfig().phantom.max : value,
+		"entity.phantom.max", value -> (int)value < ConfigHelper.getConfig().phantom.min ? ConfigHelper.getConfig().phantom.min : value
 	);
 
 	@SuppressWarnings({"unused", "unchecked"})
@@ -59,8 +59,6 @@ public class FabricCommonCommandRegistration {
 					String configClassName = configClass.getSimpleName();
 					configClassName = Character.toLowerCase(configClassName.charAt(0)) + configClassName.substring(1);
 
-					Map<String, Function<Object, Object>> configSpecialValueModifiers = specialValueModifiers.getOrDefault(configClassName, new HashMap<>());
-
 					String category = configClass.getAnnotation(ConfigCategory.class).value();
 					if (!categoryNodes.containsKey(category)) {
 						LiteralCommandNode<ServerCommandSource> featureNode = createCategoryNode(category);
@@ -68,7 +66,7 @@ public class FabricCommonCommandRegistration {
 						difficultyTweakerNode.addChild(featureNode);
 					}
 
-					createFeatureNodes(categoryNodes.get(category), (Class<? extends Config.ConfigEntry>)configClass, category, configClassName, configSpecialValueModifiers);
+					createFeatureNodes(categoryNodes.get(category), (Class<? extends Config.ConfigEntry>)configClass, category, configClassName);
 				} else {
 					LOGGER.debug("Feature category not recognized for feature \"" + configClass.getName() + "\"");
 				}
@@ -85,7 +83,7 @@ public class FabricCommonCommandRegistration {
 			}).build();
 	}
 
-	private static void createFeatureNodes(LiteralCommandNode<ServerCommandSource> categoryNode, Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, Map<String, Function<Object, Object>> valueModifiers) {
+	private static void createFeatureNodes(LiteralCommandNode<ServerCommandSource> categoryNode, Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName) {
 		LiteralCommandNode<ServerCommandSource> featureNode = CommandManager.literal(featureName)
 			.executes(context -> {
 				sendText(context, Text.translatable("difficultytweaker." + featureCategory + "." + featureName));
@@ -102,7 +100,6 @@ public class FabricCommonCommandRegistration {
 					featureCategory,
 					featureName,
 					field.getName(),
-					valueModifiers.getOrDefault(field.getName(), value -> value),
 					field.getAnnotation(SpecialFormat.class) != null ? field.getAnnotation(SpecialFormat.class).value() : "§l[%s]§r"
 				);
 			}
@@ -115,7 +112,7 @@ public class FabricCommonCommandRegistration {
 		LiteralCommandNode<ServerCommandSource> activeNode = CommandManager.literal("active")
 			.executes(context -> {
 				ConfigHelper.reloadConfig(context.getSource().getServer());
-				String value = toDisplayableString(FabricCommonCommandRegistration.<Config.ConfigEntry>getField(ConfigHelper.getConfig(), featureName).active);
+				String value = toDisplayableString(CommandRegistration.<Config.ConfigEntry>getField(ConfigHelper.getConfig(), featureName).active);
 				sendText(context, Text.translatable("difficultytweaker.active", value));
 				return 1;
 			})
@@ -124,7 +121,7 @@ public class FabricCommonCommandRegistration {
 		ArgumentCommandNode<ServerCommandSource, Boolean> activeValueNode = CommandManager.argument("active", BoolArgumentType.bool())
 			.executes(context -> {
 				boolean a = getBool(context, "active");
-				FabricCommonCommandRegistration.<Config.ConfigEntry>getField(ConfigHelper.getConfig(), featureName).active = a;
+				CommandRegistration.<Config.ConfigEntry>getField(ConfigHelper.getConfig(), featureName).active = a;
 				ConfigHelper.saveConfig(context.getSource().getServer());
 				sendActiveStatus(context, a, featureName);
 				return a ? 1 : 0;
@@ -134,7 +131,7 @@ public class FabricCommonCommandRegistration {
 		activeNode.addChild(activeValueNode);
 	}
 
-	public static void createFeatureOptionNodes(LiteralCommandNode<ServerCommandSource> featureMainNode, Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, String optionName, Function<Object, Object> valueModifier, String format) {
+	public static void createFeatureOptionNodes(LiteralCommandNode<ServerCommandSource> featureMainNode, Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, String optionName, String format) {
 		LiteralCommandNode<ServerCommandSource> featureNode = createFeatureOptionNode(featureClass, featureCategory, featureName, optionName, format);
 		featureMainNode.addChild(featureNode);
 
@@ -142,11 +139,11 @@ public class FabricCommonCommandRegistration {
 
 		ArgumentCommandNode<ServerCommandSource, ?> featureValueNode;
 		if (option instanceof Integer) {
-			featureValueNode = createFeatureOptionIntegerValueNode(featureClass, featureName, optionName, valueModifier);
+			featureValueNode = createFeatureOptionIntegerValueNode(featureClass, featureCategory, featureName, optionName, format);
 		} else if (option instanceof Float) {
-			featureValueNode = createFeatureOptionFloatValueNode(featureClass, featureName, optionName, valueModifier);
+			featureValueNode = createFeatureOptionFloatValueNode(featureClass, featureCategory, featureName, optionName, format);
 		} else if (option instanceof Boolean) {
-			featureValueNode = createFeatureOptionBooleanValueNode(featureClass, featureName, optionName, valueModifier);
+			featureValueNode = createFeatureOptionBooleanValueNode(featureClass, featureCategory, featureName, optionName);
 		} else {
 			LOGGER.debug("Found option \"" + optionName + "\" with unsupported type");
 			return;
@@ -159,19 +156,22 @@ public class FabricCommonCommandRegistration {
 		return CommandManager.literal(optionName)
 			.executes(context -> {
 				ConfigHelper.reloadConfig(context.getSource().getServer());
-				Object value = getField(featureClass.cast(getField(ConfigHelper.getConfig(), featureName)), optionName);
-				String str = value instanceof Boolean ? toDisplayableString((Boolean)value) : String.format(format, value);
-				sendText(context, Text.translatable("difficultytweaker." + featureCategory + "." + featureName + "." + optionName, str));
+				Object currentValue = getField(featureClass.cast(getField(ConfigHelper.getConfig(), featureName)), optionName);
+				String currentValueString = currentValue instanceof Boolean ? toDisplayableString((Boolean)currentValue) : String.format(format, currentValue);
+				Object defaultValue = getField(featureClass.cast(getField(NEW_CONFIG, featureName)), optionName);
+				String defaultValueString = defaultValue instanceof Boolean ? toDisplayableString((Boolean)defaultValue) : String.format(format, defaultValue);
+				sendText(context, Text.translatable("difficultytweaker.option", Text.translatable("difficultytweaker." + featureCategory + "." + featureName + "." + optionName), defaultValueString, currentValueString));
 				return 1;
 			})
 			.build();
 	}
 
-	private static ArgumentCommandNode<ServerCommandSource, Float> createFeatureOptionFloatValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureName, String optionName, Function<Object, Object> valueModifier) {
+	private static ArgumentCommandNode<ServerCommandSource, Float> createFeatureOptionFloatValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, String optionName, String format) {
 		return CommandManager.argument(optionName, FloatArgumentType.floatArg())
 			.executes(context -> {
 				float value = getFloat(context, optionName);
-				value = (float)valueModifier.apply(value);
+				value = (float)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+
 				BoundedFloat boundedFloat = null;
 				try {
 					boundedFloat = featureClass.getDeclaredField(optionName).getAnnotation(BoundedFloat.class);
@@ -186,16 +186,17 @@ public class FabricCommonCommandRegistration {
 					LOGGER.debug("Failed to set option \"" + optionName + "\" for feature \"" + featureName + "\"");
 				}
 				ConfigHelper.saveConfig(context.getSource().getServer());
-				sendText(context, Text.translatable("difficultytweaker.feedback", value));
+				sendText(context, Text.translatable("difficultytweaker.feedback", String.format(format, value)));
 				return 1;
 			}).build();
 	}
 
-	private static ArgumentCommandNode<ServerCommandSource, Integer> createFeatureOptionIntegerValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureName, String optionName, Function<Object, Object> valueModifier) {
+	private static ArgumentCommandNode<ServerCommandSource, Integer> createFeatureOptionIntegerValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, String optionName, String format) {
 		return CommandManager.argument(optionName, IntegerArgumentType.integer())
 			.executes(context -> {
 				int value = getInteger(context, optionName);
-				value = (int)valueModifier.apply(value);
+				value = (int)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+
 				BoundedInteger boundedInteger = null;
 				try {
 					boundedInteger = featureClass.getDeclaredField(optionName).getAnnotation(BoundedInteger.class);
@@ -210,21 +211,22 @@ public class FabricCommonCommandRegistration {
 					LOGGER.debug("Failed to set option \"" + optionName + "\" for feature \"" + featureName + "\"");
 				}
 				ConfigHelper.saveConfig(context.getSource().getServer());
-				sendText(context, Text.translatable("difficultytweaker.feedback", value));
+				sendText(context, Text.translatable("difficultytweaker.feedback", String.format(format, value)));
 				return 1;
 			}).build();
 	}
 
-	private static ArgumentCommandNode<ServerCommandSource, Boolean> createFeatureOptionBooleanValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureName, String optionName, Function<Object, Object> valueModifier) {
+	private static ArgumentCommandNode<ServerCommandSource, Boolean> createFeatureOptionBooleanValueNode(Class<? extends Config.ConfigEntry> featureClass, String featureCategory, String featureName, String optionName) {
 		return CommandManager.argument(optionName, BoolArgumentType.bool())
 			.executes(context -> {
 				boolean value = getBool(context, optionName);
-				value = (boolean)valueModifier.apply(value);
+				value = (boolean)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+
 				if (!setField(featureClass.cast(getField(ConfigHelper.getConfig(), featureName)), optionName, value)) {
 					LOGGER.debug("Failed to set option \"" + optionName + "\" for feature \"" + featureName + "\"");
 				}
 				ConfigHelper.saveConfig(context.getSource().getServer());
-				sendText(context, Text.translatable("difficultytweaker.feedback", value));
+				sendText(context, Text.translatable("difficultytweaker.feedback", toDisplayableString(value)));
 				return 1;
 			}).build();
 	}
@@ -265,8 +267,8 @@ public class FabricCommonCommandRegistration {
 	}
 
 
-	private static void sendActiveStatus(CommandContext<ServerCommandSource> context, boolean active, String name) {
-		sendText(context, Text.translatable(active ? "difficultytweaker.activated" : "difficultytweaker.deactivated", name));
+	private static void sendActiveStatus(CommandContext<ServerCommandSource> context, boolean active, String featureName) {
+		sendText(context, Text.translatable(active ? "difficultytweaker.activated" : "difficultytweaker.deactivated", featureName));
 	}
 
 	private static String toDisplayableString(boolean bool) {

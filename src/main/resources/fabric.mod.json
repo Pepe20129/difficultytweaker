@@ -29,7 +29,7 @@
 	"accessWidener" : "difficultytweaker.accesswidener",
 	"depends": {
 		"java": ">=17",
-		"minecraft": "1.19-pre1",
+		"minecraft": "1.19-beta.3",
 		"fabricloader": ">=0.12.10",
 		"fabric": ">=0.42.0"
 	}

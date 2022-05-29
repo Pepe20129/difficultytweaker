@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LightningEntity.class)
 public class LightningEntityMixin {
 	@Redirect(
-		method = "tick()V",
+		method = "tick",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/World;getDifficulty()Lnet/minecraft/world/Difficulty;"

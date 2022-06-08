@@ -26,7 +26,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	compileOnly "org.quiltmc:quilt-loader:${project.quilt_loader_version}"
-	//compileOnly "org.quiltmc:qsl:${project.qsl_version}"
+	compileOnly "org.quiltmc:qsl:${project.qsl_version}+${project.minecraft_version}"
 }
 
 processResources {

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Declares the minimum and maximum values that a {@link Float} field can take<br>
  * <br>
  * Note that as a limitation of Java, this only accepts constant values,<br>
- * for non-constant values, use {@link CommandRegistration#specialValueModifiers}
+ * for non-constant values, use {@link CommandRegistration#SPECIAL_VALUE_MODIFIERS}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

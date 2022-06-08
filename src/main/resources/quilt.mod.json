@@ -14,7 +14,7 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "1.19-beta.3"
+				"versions": "1.19.x"
 			},
 			{
 				"id": "quilt-loader",

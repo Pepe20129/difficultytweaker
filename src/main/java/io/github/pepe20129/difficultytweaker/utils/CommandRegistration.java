@@ -35,7 +35,7 @@ public class CommandRegistration {
 	private static final Config NEW_CONFIG = new Config();
 
 	//can't implement this in the annotations because java requires constant values in annotation initialization
-	private static final Map<String, Function<Object, Object>> specialValueModifiers = Map.of(
+	private static final Map<String, Function<Object, Object>> SPECIAL_VALUE_MODIFIERS = Map.of(
 		"entity.phantom.min", value -> (int)value > ConfigHelper.getConfig().phantom.max ? ConfigHelper.getConfig().phantom.max : value,
 		"entity.phantom.max", value -> (int)value < ConfigHelper.getConfig().phantom.min ? ConfigHelper.getConfig().phantom.min : value
 	);
@@ -170,7 +170,7 @@ public class CommandRegistration {
 		return CommandManager.argument(optionName, FloatArgumentType.floatArg())
 			.executes(context -> {
 				float value = getFloat(context, optionName);
-				value = (float)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+				value = (float)SPECIAL_VALUE_MODIFIERS.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
 
 				BoundedFloat boundedFloat = null;
 				try {
@@ -195,7 +195,7 @@ public class CommandRegistration {
 		return CommandManager.argument(optionName, IntegerArgumentType.integer())
 			.executes(context -> {
 				int value = getInteger(context, optionName);
-				value = (int)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+				value = (int)SPECIAL_VALUE_MODIFIERS.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
 
 				BoundedInteger boundedInteger = null;
 				try {
@@ -220,7 +220,7 @@ public class CommandRegistration {
 		return CommandManager.argument(optionName, BoolArgumentType.bool())
 			.executes(context -> {
 				boolean value = getBool(context, optionName);
-				value = (boolean)specialValueModifiers.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
+				value = (boolean)SPECIAL_VALUE_MODIFIERS.getOrDefault(featureCategory + "." + featureName + "." + optionName, v -> v).apply(value);
 
 				if (!setField(featureClass.cast(getField(ConfigHelper.getConfig(), featureName)), optionName, value)) {
 					LOGGER.debug("Failed to set option \"" + optionName + "\" for feature \"" + featureName + "\"");

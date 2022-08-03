@@ -17,6 +17,6 @@ public abstract class BeeEntityMixin extends AnimalEntity {
 
 	@ModifyVariable(method = "tryAttack(Lnet/minecraft/entity/Entity;)Z", at = @At(value = "LOAD", ordinal = 0))
 	private int modifyPoisonDuration(int original) {
-		return ConfigHelper.getConfig().bee.active ?  ConfigHelper.getConfig().bee.length : original;
+		return ConfigHelper.getConfig().bee.active ?  ConfigHelper.getConfig().bee.poisonLength : original;
 	}
 }

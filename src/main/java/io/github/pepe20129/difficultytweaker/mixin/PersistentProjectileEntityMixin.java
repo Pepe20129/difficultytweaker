@@ -24,6 +24,6 @@ public abstract class PersistentProjectileEntityMixin {
 		constant = @Constant(doubleValue = 0.11d)
 	)
 	private static double modifyMultiplier(double original) {
-		return ConfigHelper.getConfig().projectile.active ? ConfigHelper.getConfig().projectile.bonus : original;
+		return ConfigHelper.getConfig().projectile.active ? ConfigHelper.getConfig().projectile.damageBonus : original;
 	}
 }

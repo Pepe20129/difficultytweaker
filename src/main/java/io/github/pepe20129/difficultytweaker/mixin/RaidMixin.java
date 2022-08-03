@@ -15,7 +15,7 @@ public class RaidMixin {
 	@Inject(at = @At("RETURN"), method = "getMaxWaves(Lnet/minecraft/world/Difficulty;)I", cancellable = true)
 	private void getMaxWaves(Difficulty difficulty, CallbackInfoReturnable<Integer> cir) {
 		if (ConfigHelper.getConfig().raid.active)
-			cir.setReturnValue(ConfigHelper.getConfig().raid.count);
+			cir.setReturnValue(ConfigHelper.getConfig().raid.waveCount);
 	}
 
 	@Shadow @Final private int waveCount;

@@ -19,6 +19,6 @@ public class NetherPortalBlockMixin extends Block {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I")
 	)
 	private int getId(Difficulty difficulty) {
-		return ConfigHelper.getConfig().netherPortal.active ? ConfigHelper.getConfig().netherPortal.probability : difficulty.getId();
+		return ConfigHelper.getConfig().netherPortal.active ? ConfigHelper.getConfig().netherPortal.pigmanProbability : difficulty.getId();
 	}
 }

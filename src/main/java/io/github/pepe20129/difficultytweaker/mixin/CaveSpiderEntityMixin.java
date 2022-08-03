@@ -17,6 +17,6 @@ public class CaveSpiderEntityMixin extends SpiderEntity {
 
 	@ModifyVariable(at = @At(value = "LOAD", ordinal = 0), method = "tryAttack(Lnet/minecraft/entity/Entity;)Z")
 	private int modifyPoisonDuration(int original) {
-		return ConfigHelper.getConfig().caveSpider.active ? ConfigHelper.getConfig().caveSpider.length : original;
+		return ConfigHelper.getConfig().caveSpider.active ? ConfigHelper.getConfig().caveSpider.poisonLength : original;
 	}
 }

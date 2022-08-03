@@ -1,5 +1,6 @@
 package io.github.pepe20129.difficultytweaker.utils;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.pepe20129.difficultytweaker.utils.annotations.BoundedFloat;
 import io.github.pepe20129.difficultytweaker.utils.annotations.BoundedInteger;
 import io.github.pepe20129.difficultytweaker.utils.annotations.ConfigCategory;
@@ -15,14 +16,16 @@ public class Config {
 	@ConfigCategory("entity")
 	public static class Bee extends ConfigEntry {
 		@BoundedInteger(min = 0)
-		public int length = 18;
+		@SerializedName(value = "poisonLength", alternate = "length")
+		public int poisonLength = 18;
 	}
 
 	public CaveSpider caveSpider = new CaveSpider();
 	@ConfigCategory("entity")
 	public static class CaveSpider extends ConfigEntry {
 		@BoundedInteger(min = 0)
-		public int length = 15;
+		@SerializedName(value = "poisonLength", alternate = "length")
+		public int poisonLength = 15;
 	}
 
 	public ClampedLocalDifficulty clampedLocalDifficulty = new ClampedLocalDifficulty();
@@ -43,7 +46,8 @@ public class Config {
 	public Guardian guardian = new Guardian();
 	@ConfigCategory("entity")
 	public static class Guardian extends ConfigEntry {
-		public float amount = 2f;
+		@SerializedName(value = "extraDamage", alternate = "amount")
+		public float extraDamage = 2f;
 	}
 
 	public Lightning lightning = new Lightning();
@@ -75,7 +79,8 @@ public class Config {
 	public static class NetherPortal extends ConfigEntry {
 		@SpecialFormat("§l[%s/2000]§r")
 		@BoundedInteger(min = 0, max = 2000)
-		public int probability = 3;
+		@SerializedName(value = "pigmanProbability", alternate = "probability")
+		public int pigmanProbability = 3;
 	}
 
 	public Phantom phantom = new Phantom();
@@ -91,7 +96,8 @@ public class Config {
 	@ConfigCategory("entity")
 	public static class Player extends ConfigEntry {
 		@BoundedFloat(min = 0)
-		public float multiplier = 1.5f;
+		@SerializedName(value = "damageMultiplier", alternate = "multiplier")
+		public float damageMultiplier = 1.5f;
 		@BoundedInteger(min = 0)
 		public int hungerDamageThreshold = 0;
 	}
@@ -99,13 +105,15 @@ public class Config {
 	public Projectile projectile = new Projectile();
 	@ConfigCategory("entity")
 	public static class Projectile extends ConfigEntry {
-		public float bonus = 0.33f;
+		@SerializedName(value = "damageBonus", alternate = "bonus")
+		public float damageBonus = 0.33f;
 	}
 
 	public Raid raid = new Raid();
 	@ConfigCategory("world")
 	public static class Raid extends ConfigEntry {
-		public int count = 7;
+		@SerializedName(value = "waveCount", alternate = "count")
+		public int waveCount = 7;
 	}
 
 	public RaidMember raidMember = new RaidMember();

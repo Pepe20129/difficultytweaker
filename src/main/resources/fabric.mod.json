@@ -3,7 +3,7 @@
 	"id": "difficultytweaker",
 	"version": "${version}",
 	"name": "Difficulty Tweaker",
-	"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
+	"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of different factors with a custom (carpet mod inspired) command",
 	"authors": [
 		"Pepe20129/Pablo#1981"
 	],
@@ -29,8 +29,8 @@
 	"accessWidener" : "difficultytweaker.accesswidener",
 	"depends": {
 		"java": ">=17",
-		"minecraft": "1.19.x",
+		"minecraft": "~1.19.4",
 		"fabricloader": ">=0.12.10",
-		"fabric": ">=0.42.0"
+		"fabric-api": ">=0.76.0"
 	}
 }

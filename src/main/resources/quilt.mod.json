@@ -14,21 +14,21 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "1.19.x"
+				"versions": "~1.19.4"
 			},
 			{
 				"id": "quilt_loader",
 				"versions": ">=0.16.0"
 			},
 			{
-				"id": "fabric",
-				"versions": ">=0.42.0"
+				"id": "fabric-api",
+				"versions": ">=0.76.0"
 			}
 		],
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"metadata": {
 			"name": "Difficulty Tweaker",
-			"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of diferent factors with a custom (carpet mod inspired) command",
+			"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of different factors with a custom (carpet mod inspired) command",
 			"contributors": {
 				"Pepe20129/Pablo#1981": "Author",
 				"macbrayne": "Contributor"

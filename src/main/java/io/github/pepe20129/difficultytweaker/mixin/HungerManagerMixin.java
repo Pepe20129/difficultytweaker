@@ -23,10 +23,10 @@ public class HungerManagerMixin {
 	private void modifyHungerDamageLimit(PlayerEntity player, CallbackInfo ci) {
 		if (ConfigHelper.getConfig().player.active) {
 			if (player.getHealth() > ConfigHelper.getConfig().player.hungerDamageThreshold)
-				player.damage(DamageSource.STARVE, 1F);
+				player.damage(player.world.getDamageSources().starve(), 1F);
 		} else {
 			if (player.getHealth() > 10F || player.world.getDifficulty() == Difficulty.HARD || player.getHealth() > 1F && player.world.getDifficulty() == Difficulty.NORMAL)
-				player.damage(DamageSource.STARVE, 1F);
+				player.damage(player.world.getDamageSources().starve(), 1F);
 		}
 	}
 }

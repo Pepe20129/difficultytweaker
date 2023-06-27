@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
 import static com.mojang.brigadier.arguments.FloatArgumentType.getFloat;
@@ -276,6 +277,7 @@ public class CommandRegistration {
 	}
 
 	private static void sendText(CommandContext<ServerCommandSource> context, MutableText text) {
-		context.getSource().sendFeedback(text, true);
+		Supplier<Text> textSupplier = () -> text;
+		context.getSource().sendFeedback(textSupplier, true);
 	}
 }

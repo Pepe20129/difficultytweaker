@@ -14,7 +14,7 @@
 			},
 			{
 				"id": "minecraft",
-				"versions": "~1.19.4"
+				"versions": "~1.20.0"
 			},
 			{
 				"id": "quilt_loader",
@@ -31,7 +31,8 @@
 			"description": "This is a mod that allows you to change Minecraft's difficulty by allowing you to change a lot of different factors with a custom (carpet mod inspired) command",
 			"contributors": {
 				"Pepe20129/Pablo#1981": "Author",
-				"macbrayne": "Contributor"
+				"macbrayne": "Contributor",
+				"EuropaYou": "Contributor"
 			},
 			"contact": {
 				"homepage": "https://github.com/Pepe20129/difficultytweaker",
